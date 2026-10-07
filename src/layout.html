@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{title}}</title>
+<meta name="description" content="{{description}}">
+{{robots}}<link rel="canonical" href="{{site}}{{canonical}}">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="cs_CZ">
+<meta property="og:site_name" content="Poradna KL">
+<meta property="og:title" content="{{title}}">
+<meta property="og:description" content="{{description}}">
+<meta property="og:url" content="{{site}}{{canonical}}">
+<meta property="og:image" content="{{site}}/assets/img/og.jpg">
+<meta name="theme-color" content="#F4F3EE">
+<link rel="icon" href="{{asset:assets/img/favicon.svg}}" type="image/svg+xml">
+<link rel="preload" href="{{asset:assets/fonts/satoshi-900.woff2}}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{{asset:assets/fonts/satoshi-500.woff2}}" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="{{asset:assets/css/site.css}}">
+<script>document.documentElement.className+=' js'</script>
+<script src="{{asset:assets/js/site.js}}" defer></script>
+{{jsonld}}
+</head>
+<body class="{{bodyclass}}">
+<a class="skip-link" href="#obsah">Přeskočit na obsah</a>
+
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="brand" href="{{link:uvod}}" aria-label="Poradna KL, úvodní stránka">
+      {{logo}}
+      <span><span class="brand__name">Poradna <span>KL</span></span><span class="brand__sub">bezplatná poradna v Kladně</span></span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="hlavni-menu">{{icon:list}}<span>Menu</span></button>
+    <nav class="nav" id="hlavni-menu" aria-label="Hlavní menu">
+      <ul class="nav__list">
+        {{nav}}
+        <li class="nav__cta"><a class="btn btn--primary" href="{{link:kontakt}}#formular">Požádat o schůzku</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="obsah" tabindex="-1">
+{{content}}
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer__panel">
+    <div class="container">
+      <div class="site-footer__top">
+        <div>
+          <a class="brand brand--light" href="{{link:uvod}}" aria-label="Poradna KL, úvodní stránka">
+            {{logo}}
+            <span><span class="brand__name">Poradna <span>KL</span></span><span class="brand__sub">bezplatná poradna v Kladně</span></span>
+          </a>
+          <p class="footer-claim">Bezplatné právní poradenství pro lidi v&nbsp;sociální nouzi. Nájem, dluhy, sociální dávky.</p>
+        </div>
+        <div>
+          <h2>Poradna KL, z.ú.</h2>
+          <address>
+            T. G. Masaryka 108, 272 01 Kladno<br>
+            <a href="mailto:info@poradnakl.cz">info@poradnakl.cz</a><br>
+            IČO <span class="todo">[doplnit]</span><br>
+            Zapsaný v rejstříku ústavů vedeném <span class="todo">[soud]</span>, oddíl U, vložka <span class="todo">[číslo]</span><br>
+            Datová schránka <span class="todo">[ID]</span>
+          </address>
+        </div>
+        <div>
+          <h2>Odkazy</h2>
+          <ul>
+            <li><a href="{{link:ochrana-osobnich-udaju}}">Ochrana osobních údajů</a></li>
+            <li><a href="{{link:ochrana-osobnich-udaju}}#cookies">Cookies</a></li>
+            <li><a href="{{link:o-nas}}#podporte-nas">Podpořte nás</a></li>
+            <li><a href="{{link:pristupnost}}">Prohlášení o přístupnosti</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2>Jste v ohrožení?</h2>
+          <p class="footer-crisis">{{icon:lifebuoy}}<span>Nejsme krizová služba. V&nbsp;akutním ohrožení volejte <a href="tel:158">158</a> nebo <a href="tel:112">112</a>.</span></p>
+        </div>
+      </div>
+      <div class="site-footer__bottom">
+        <p>Informace na tomto webu jsou obecné a&nbsp;nenahrazují poradu k&nbsp;vaší konkrétní situaci. Nejsme advokátní kancelář.</p>
+      </div>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

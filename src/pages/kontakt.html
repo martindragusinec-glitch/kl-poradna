@@ -1,0 +1,118 @@
+<!--meta {"slug":"kontakt","title":"Kontakt – T. G. Masaryka 108, Kladno","description":"Kontaktní formulář a e-mail. Ozveme se vám a domluvíme termín schůzky.","nav":"kontakt"} -->
+<section class="page-head" aria-labelledby="page-title">
+  <div class="page-head__panel">
+    {{deco}}
+    <div class="container">
+    <h1 id="page-title">Kontakt</h1>
+    <p class="lead">Napište nám pár vět o&nbsp;tom, co řešíte. Ozveme se vám do 5&nbsp;pracovních dnů a&nbsp;domluvíme termín schůzky.</p>
+    </div>
+  </div>
+</section>
+
+<div class="section">
+  <div class="container contact-layout">
+    <section class="contact-info" aria-labelledby="udaje-title">
+      <h2 id="udaje-title">Kontaktní údaje</h2>
+      <ul class="facts">
+        <li class="fact">{{icon:users-three}}<span><strong>Poradna KL, z.ú.</strong></span></li>
+        <li class="fact">{{icon:map-pin}}<span><strong>T. G. Masaryka 108, 272 01 Kladno</strong>
+          <span class="inline-actions"><a href="https://mapy.cz/?q=T.%20G.%20Masaryka%20108%2C%20Kladno">Mapy.cz</a><a href="https://www.google.com/maps/search/?api=1&amp;query=T.+G.+Masaryka+108,+272+01+Kladno">Google Mapy</a></span></span></li>
+        <li class="fact">{{icon:envelope-simple}}<span><strong><a href="mailto:info@poradnakl.cz" id="email">info@poradnakl.cz</a></strong>
+          <span class="inline-actions"><button class="copy-btn" type="button" data-copy="#email" hidden>{{icon:copy}}Zkopírovat e-mail</button></span></span></li>
+        <li class="fact">{{icon:calendar-check}}<span><strong>Schůzky jen po předchozí domluvě.</strong></span></li>
+        <li class="fact">{{icon:wheelchair}}<span><strong>Kancelář je bezbariérová.</strong>Můžete přijít i&nbsp;s&nbsp;doprovodem.</span></li>
+      </ul>
+      <p class="vh" role="status" aria-live="polite" data-copy-status></p>
+    </section>
+
+    <section class="form-card" id="formular" aria-labelledby="form-title" data-next="{{link:jak-to-funguje}}#s-sebou">
+      <h2 id="form-title">Požádat o schůzku</h2>
+      <p class="form-intro">Všechna pole kromě těch označených „nepovinné“ je potřeba vyplnit. Telefon a&nbsp;e-mail: stačí jedno z&nbsp;nich.</p>
+      <div class="note">{{icon:shield-check}}<div><p>Prosíme, nepište do formuláře rodné číslo, údaje o&nbsp;zdraví ani jiné citlivé informace. Podrobnosti probereme osobně.</p></div></div>
+
+      <div class="error-summary mt-l" id="chyby" tabindex="-1" hidden>
+        <div role="alert">
+          <h3 id="chyby-title">{{icon:warning-circle}}Je potřeba něco opravit</h3>
+          <ul></ul>
+        </div>
+      </div>
+
+      <form class="form" action="{{form_action}}" method="post" novalidate data-contact-form data-endpoint="{{form_endpoint}}">
+        <div class="field" data-field="jmeno">
+          <label class="label" for="jmeno">Jméno a příjmení</label>
+          <p class="field-error" id="jmeno-error" hidden></p>
+          <input class="input input--mid" id="jmeno" name="jmeno" type="text" autocomplete="name" required aria-describedby="jmeno-error">
+        </div>
+
+        <fieldset class="field" data-field="kontakt" aria-describedby="kontakt-hint kontakt-error">
+          <legend class="legend">Jak se vám máme ozvat?</legend>
+          <p class="hint" id="kontakt-hint">Vyplňte alespoň telefon, nebo e-mail.</p>
+          <p class="field-error" id="kontakt-error" hidden></p>
+          <div class="fieldset-grid fieldset-grid--2">
+            <div class="field" data-field="telefon">
+              <label class="label" for="telefon">Telefon</label>
+              <p class="hint" id="telefon-hint">Zavoláme vám a&nbsp;domluvíme termín.</p>
+              <p class="field-error" id="telefon-error" hidden></p>
+              <input class="input" id="telefon" name="telefon" type="tel" inputmode="tel" autocomplete="tel" aria-describedby="telefon-hint telefon-error">
+            </div>
+            <div class="field" data-field="email">
+              <label class="label" for="email-pole">E-mail</label>
+              <p class="hint" id="email-hint">Odpovíme vám e-mailem.</p>
+              <p class="field-error" id="email-error" hidden></p>
+              <input class="input" id="email-pole" name="email" type="email" autocomplete="email" spellcheck="false" aria-describedby="email-hint email-error">
+            </div>
+          </div>
+        </fieldset>
+
+        <div class="field" data-field="obec">
+          <label class="label" for="obec">Obec, kde bydlíte <span class="opt">(nepovinné)</span></label>
+          <input class="input input--mid" id="obec" name="obec" type="text" autocomplete="address-level2">
+        </div>
+
+        <fieldset class="field" data-field="tema" aria-describedby="tema-error">
+          <legend class="legend">S čím potřebujete pomoci?</legend>
+          <p class="field-error" id="tema-error" hidden></p>
+          <div class="choices">
+            <div class="choice"><input type="radio" id="tema-najem" name="tema" value="Nájem a bydlení"><label for="tema-najem"><span class="choice__dot" aria-hidden="true"></span><span>Nájem a bydlení</span>{{icon:house-line}}</label></div>
+            <div class="choice"><input type="radio" id="tema-dluhy" name="tema" value="Dluhy a exekuce"><label for="tema-dluhy"><span class="choice__dot" aria-hidden="true"></span><span>Dluhy a exekuce</span>{{icon:coins}}</label></div>
+            <div class="choice"><input type="radio" id="tema-davky" name="tema" value="Sociální dávky"><label for="tema-davky"><span class="choice__dot" aria-hidden="true"></span><span>Sociální dávky</span>{{icon:hand-heart}}</label></div>
+            <div class="choice"><input type="radio" id="tema-jine" name="tema" value="Jiné"><label for="tema-jine"><span class="choice__dot" aria-hidden="true"></span><span>Jiné</span>{{icon:question}}</label></div>
+          </div>
+        </fieldset>
+
+        <div class="field" data-field="popis">
+          <label class="label" for="popis">Stručný popis</label>
+          <p class="hint" id="popis-hint">Stačí pár vět. Pokud vám běží nějaká lhůta, napište ji sem. Dokumenty nám můžete poslat e-mailem.</p>
+          <p class="field-error" id="popis-error" hidden></p>
+          <textarea class="textarea" id="popis" name="popis" rows="7" required aria-describedby="popis-hint popis-error popis-count"></textarea>
+          <p class="counter" id="popis-count" data-max="1000">Můžete napsat nejvýše 1&nbsp;000 znaků.</p>
+          <p class="vh" aria-live="polite" id="popis-count-live"></p>
+        </div>
+
+        <div class="field" data-field="kdy">
+          <label class="label" for="kdy">Kdy se vám hodí, abychom se ozvali <span class="opt">(nepovinné)</span></label>
+          <p class="hint" id="kdy-hint">Například: dopoledne, po 16.&nbsp;hodině.</p>
+          <input class="input input--mid" id="kdy" name="kdy" type="text" aria-describedby="kdy-hint">
+        </div>
+
+        <div class="hp" aria-hidden="true">
+          <label for="poznamka-k-adrese">Toto pole nevyplňujte</label>
+          <input id="poznamka-k-adrese" name="poznamka_k_adrese" type="text" tabindex="-1" autocomplete="off">
+        </div>
+
+        <div class="field" data-field="souhlas">
+          <p class="field-error" id="souhlas-error" hidden></p>
+          <label class="check" for="souhlas">
+            <input type="checkbox" id="souhlas" name="souhlas" value="ano" required aria-describedby="souhlas-error">
+            <span>Seznámil/a jsem se se <a href="{{link:ochrana-osobnich-udaju}}">Zásadami ochrany osobních údajů</a>.</span>
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn btn--primary" type="submit">{{icon:paper-plane-tilt}}Odeslat</button>
+          <p class="form-status" role="status" aria-live="polite" data-form-status></p>
+        </div>
+      </form>
+    </section>
+  </div>
+</div>

@@ -1,0 +1,205 @@
+#!/usr/bin/env python3
+"""Sestaví web Poradna KL ze šablony src/layout.html a stránek src/pages/*.html.
+
+  python3 tools/build.py            -> dist/     (produkce: čisté adresy /kontakt/, absolutní cesty)
+  python3 tools/build.py preview    -> preview/  (náhled: ploché soubory kontakt.html, relativní cesty)
+
+Zástupné značky ve stránkách:
+  {{link:slug}}  {{asset:cesta}}  {{icon:nazev}}  {{picture:nazev|alt|eager/lazy|trida}}  {{logo}}
+"""
+import html
+import json
+import re
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+SITE = "https://poradnakl.cz"          # DOPLNIT: finální doména
+FORM_ENDPOINT = ""                      # DOPLNIT: URL pro příjem formuláře (prázdné = ukázkový režim)
+FORM_ACTION = "/api/kontakt"            # záloha bez JavaScriptu (POST), musí ji obsloužit server
+
+NAV = [
+    ("uvod", "Úvod"),
+    ("s-cim-pomahame", "S čím pomáháme"),
+    ("sluzby", "Naše služby"),
+    ("jak-to-funguje", "Jak to funguje"),
+    ("caste-dotazy", "Časté dotazy"),
+    ("o-nas", "O nás"),
+    ("kontakt", "Kontakt"),
+]
+IMAGES = {  # název: (zdroj, object-position)
+    "hero": ("assets/img/src/hero-2.jpg", "62% 50%"),
+    "kladno": ("assets/img/src/kladno-1.jpg", "40% 60%"),
+    "konzultace": ("assets/img/src/hero-1.jpg", "50% 30%"),
+    "dopisy": ("assets/img/src/documents-1.jpg", "50% 50%"),
+}
+WIDTHS = (800, 1400)
+
+BUBBLES = (
+    '<path class="{p}1" d="M11 0H19A11 11 0 0 1 30 11V15A11 11 0 0 1 19 26H0V11A11 11 0 0 1 11 0Z"/>'
+    '<path class="{p}2" d="M29 12H37A11 11 0 0 1 48 23V38H29A11 11 0 0 1 18 27V23A11 11 0 0 1 29 12Z"/>'
+    '<path class="{p}3" d="M29 12H30V15A11 11 0 0 1 19 26H18V23A11 11 0 0 1 29 12Z"/>'
+)
+LOGO = '<svg class="brand__mark" viewBox="0 0 48 38" aria-hidden="true" focusable="false">' + BUBBLES.format(p="brand__b") + '</svg>'
+DECO = '<svg class="deco" viewBox="0 0 48 38" aria-hidden="true" focusable="false">' + BUBBLES.format(p="b") + '</svg>'
+
+
+def page_url(slug, mode):
+    if mode == "preview":
+        return "./" if slug == "uvod" else f"{slug}.html"
+    return "/" if slug == "uvod" else f"/{slug}/"
+
+
+def out_path(slug, mode, out):
+    if slug == "uvod":
+        return out / "index.html"
+    if mode == "preview" or slug == "404":
+        return out / f"{slug}.html"
+    return out / slug / "index.html"
+
+
+def icon(name):
+    svg = (ROOT / "assets/icons" / f"{name}.svg").read_text()
+    inner = re.search(r"<svg[^>]*>(.*)</svg>", svg, re.S).group(1)
+    return f'<svg class="i" viewBox="0 0 256 256" aria-hidden="true" focusable="false">{inner}</svg>'
+
+
+def build_images(out):
+    """Zmenší fotky (sips) do WebP + JPEG; vrací rozměry pro width/height."""
+    dims = {}
+    dest = out / "assets/img"
+    dest.mkdir(parents=True, exist_ok=True)
+    for name, (src, _) in IMAGES.items():
+        src_path = ROOT / src
+        for w in WIDTHS:
+            for fmt, ext in (("jpeg", "jpg"),):  # sips neumí zapisovat WebP
+                target = dest / f"{name}-{w}.{ext}"
+                if not target.exists() or target.stat().st_mtime < src_path.stat().st_mtime:
+                    subprocess.run(["sips", "-s", "format", fmt, "-s", "formatOptions", "74", "--resampleWidth", str(w),
+                                    str(src_path), "--out", str(target)], check=True, capture_output=True)
+        info = subprocess.run(["sips", "-g", "pixelWidth", "-g", "pixelHeight", str(src_path)], capture_output=True, text=True).stdout
+        sw = int(re.search(r"pixelWidth: (\d+)", info).group(1))
+        sh = int(re.search(r"pixelHeight: (\d+)", info).group(1))
+        dims[name] = (WIDTHS[-1], round(WIDTHS[-1] * sh / sw))
+    return dims
+
+
+def picture(arg, asset, dims):
+    parts = arg.split("|")
+    name, alt = parts[0], parts[1]
+    loading = parts[2] if len(parts) > 2 else "lazy"
+    cls = parts[3] if len(parts) > 3 else "hero__img"
+    w, h = dims[name]
+    pos = IMAGES[name][1]
+    srcset = ", ".join(f"{asset(f'assets/img/{name}-{x}.jpg')} {x}w" for x in WIDTHS)
+    sizes = "(min-width: 900px) 50vw, 100vw"
+    prio = ' fetchpriority="high"' if loading == "eager" else ""
+    return (f'<img class="{cls}" src="{asset(f"assets/img/{name}-{WIDTHS[-1]}.jpg")}" srcset="{srcset}" sizes="{sizes}" '
+            f'alt="{html.escape(alt)}" width="{w}" height="{h}" loading="{loading}" decoding="async"{prio} style="object-position:{pos}">')
+
+
+def faq_jsonld(content):
+    items = []
+    for m in re.finditer(r"<summary><span>(.*?)</span>.*?</summary>\s*<div class=\"faq__answer\">(.*?)</div>", content, re.S):
+        q = re.sub(r"<[^>]+>", "", m.group(1))
+        a = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", "", m.group(2))).strip()
+        items.append({"@type": "Question", "name": html.unescape(q), "acceptedAnswer": {"@type": "Answer", "text": html.unescape(a)}})
+    return {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": items}
+
+
+ORG = {
+    "@context": "https://schema.org",
+    "@type": ["NGO", "LegalService"],
+    "name": "Poradna KL, z.ú.",
+    "alternateName": "Poradna KL",
+    "description": "Bezplatné právní poradenství pro lidi v sociální nouzi v Kladně: nájem, dluhy, sociální dávky.",
+    "url": SITE + "/",
+    "email": "info@poradnakl.cz",
+    "isAccessibleForFree": True,
+    "areaServed": {"@type": "City", "name": "Kladno"},
+    "address": {"@type": "PostalAddress", "streetAddress": "T. G. Masaryka 108", "postalCode": "272 01",
+                "addressLocality": "Kladno", "addressCountry": "CZ"},
+}
+
+
+def build(mode):
+    out = ROOT / ("preview" if mode == "preview" else "dist")
+    if out.exists():
+        for p in out.iterdir():
+            if p.name != "assets":
+                shutil.rmtree(p) if p.is_dir() else p.unlink()
+    out.mkdir(exist_ok=True)
+    for sub in ("css", "js", "fonts"):
+        shutil.copytree(ROOT / "assets" / sub, out / "assets" / sub, dirs_exist_ok=True)
+    for p in (out / "assets/fonts").glob("_*.css"):
+        p.unlink()
+    dims = build_images(out)
+    if (ROOT / "assets/img/og.jpg").exists():
+        shutil.copy(ROOT / "assets/img/og.jpg", out / "assets/img/og.jpg")
+    shutil.copy(ROOT / "assets/img/favicon.svg", out / "assets/img/favicon.svg")
+
+    layout = (ROOT / "src/layout.html").read_text()
+    pages = sorted((ROOT / "src/pages").glob("*.html"))
+    sitemap = []
+    for src in pages:
+        raw = src.read_text()
+        meta = json.loads(re.match(r"<!--meta (.*?) -->", raw, re.S).group(1))
+        content = raw[raw.index("-->") + 3:].strip()
+        slug = meta["slug"]
+        dest = out_path(slug, mode, out)
+        dest.parent.mkdir(parents=True, exist_ok=True)
+
+        if mode == "preview":
+            asset = lambda p: p
+            link = lambda s: page_url(s, mode)
+        else:
+            asset = lambda p: "/" + p
+            link = lambda s: page_url(s, mode)
+
+        current = ' aria-current="page"'
+        nav = "\n        ".join(
+            f'<li><a class="nav__link" href="{link(s)}"{current if meta.get("nav") == s else ""}>{label}</a></li>'
+            for s, label in NAV)
+        jsonld = [ORG] if slug == "uvod" else []
+        if meta.get("faq"):
+            jsonld.append(faq_jsonld(content))
+        jsonld_html = "\n".join(f'<script type="application/ld+json">{json.dumps(j, ensure_ascii=False)}</script>' for j in jsonld)
+
+        page = layout
+        page = page.replace("{{content}}", content)
+        page = page.replace("{{nav}}", nav).replace("{{logo}}", LOGO).replace("{{deco}}", DECO).replace("{{jsonld}}", jsonld_html)
+        page = page.replace("{{title}}", html.escape(meta["title"])).replace("{{description}}", html.escape(meta["description"]))
+        canonical = page_url(slug, "prod") if slug != "404" else "/404.html"
+        page = page.replace("{{canonical}}", canonical).replace("{{site}}", SITE)
+        page = page.replace("{{robots}}", '<meta name="robots" content="noindex">\n' if meta.get("noindex") else "")
+        page = page.replace("{{bodyclass}}", meta.get("bodyclass", "page-" + slug))
+        page = page.replace("{{form_action}}", FORM_ACTION).replace("{{form_endpoint}}", FORM_ENDPOINT)
+        page = re.sub(r"\{\{link:([\w-]+)\}\}", lambda m: link(m.group(1)), page)
+        page = re.sub(r"\{\{asset:([^}]+)\}\}", lambda m: asset(m.group(1)), page)
+        page = re.sub(r"\{\{icon:([\w-]+)\}\}", lambda m: icon(m.group(1)), page)
+        page = re.sub(r"\{\{picture:([^}]+)\}\}", lambda m: picture(m.group(1), asset, dims), page)
+        leftover = re.findall(r"\{\{[^}]+\}\}", page)
+        if leftover:
+            sys.exit(f"{src.name}: nenahrazené značky {leftover}")
+        if mode == "preview" and slug == "uvod":
+            # Artifact obalí hlavní stránku vlastní kostrou dokumentu: jen obsah hlavy a těla
+            page = page.replace("<title>Poradna KL – bezplatná poradna v Kladně</title>", "<title>Poradna KL</title>")
+            page = re.sub(r"<!doctype html>\s*<html[^>]*>\s*<head>", "", page)
+            page = re.sub(r"</head>\s*<body([^>]*)>", lambda m: '<script>document.documentElement.lang="cs";document.body.className="page-home"</script>', page)
+            page = page.replace("</body>", "").replace("</html>", "")
+        dest.write_text(page)
+        if not meta.get("noindex"):
+            sitemap.append(SITE + page_url(slug, "prod"))
+
+    if mode != "preview":
+        (out / "sitemap.xml").write_text(
+            '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+            + "".join(f"  <url><loc>{u}</loc></url>\n" for u in sitemap) + "</urlset>\n")
+        (out / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {SITE}/sitemap.xml\n")
+    print(f"{mode}: {len(pages)} stránek -> {out.relative_to(ROOT)}/")
+
+
+if __name__ == "__main__":
+    build("preview" if len(sys.argv) > 1 and sys.argv[1] == "preview" else "prod")
