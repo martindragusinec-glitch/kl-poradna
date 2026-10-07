@@ -1,0 +1,13 @@
+{
+  "name": "poradna-kl-web",
+  "private": true,
+  "type": "module",
+  "description": "Web Poradny KL – statický web (tools/build.py) + Vercel funkce api/kontakt.js",
+  "scripts": {
+    "build": "python3 tools/build.py",
+    "preview": "python3 tools/build.py preview",
+    "serve": "node tools/serve.cjs 8797",
+    "images": "python3 tools/images.py"
+  },
+  "engines": { "node": ">=20" }
+}

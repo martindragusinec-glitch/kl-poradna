@@ -1,24 +1,28 @@
 #!/usr/bin/env python3
 """Sestaví web Poradna KL ze šablony src/layout.html a stránek src/pages/*.html.
 
-  python3 tools/build.py            -> dist/     (produkce: čisté adresy /kontakt/, absolutní cesty)
-  python3 tools/build.py preview    -> preview/  (náhled: ploché soubory kontakt.html, relativní cesty)
+  python3 tools/build.py            -> dist/     (produkce: čisté adresy /kontakt/, absolutní cesty; build na Vercelu)
+  python3 tools/build.py preview    -> preview/  (náhled: ploché soubory kontakt.html, relativní cesty, formulář v ukázkovém režimu)
+
+Build používá jen standardní knihovnu Pythonu. Fotky se zmenšují zvlášť (tools/images.py, macOS) do assets/img/web/.
+Proměnné prostředí: SITE_URL (výchozí https://poradnakl.cz), FORM_ENDPOINT (výchozí /api/kontakt).
 
 Zástupné značky ve stránkách:
   {{link:slug}}  {{asset:cesta}}  {{icon:nazev}}  {{picture:nazev|alt|eager/lazy|trida}}  {{logo}}
 """
+import hashlib
 import html
 import json
+import os
 import re
 import shutil
-import subprocess
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-SITE = "https://poradnakl.cz"          # DOPLNIT: finální doména
-FORM_ENDPOINT = ""                      # DOPLNIT: URL pro příjem formuláře (prázdné = ukázkový režim)
-FORM_ACTION = "/api/kontakt"            # záloha bez JavaScriptu (POST), musí ji obsloužit server
+SITE = os.environ.get("SITE_URL", "https://poradnakl.cz").rstrip("/")   # DOPLNIT: finální doména
+FORM_ENDPOINT = os.environ.get("FORM_ENDPOINT", "/api/kontakt")          # Vercel funkce api/kontakt.js
+FORM_ACTION = "/api/kontakt"                                             # záloha bez JavaScriptu (POST)
 
 NAV = [
     ("uvod", "Úvod"),
@@ -29,13 +33,14 @@ NAV = [
     ("o-nas", "O nás"),
     ("kontakt", "Kontakt"),
 ]
-IMAGES = {  # název: (zdroj, object-position)
-    "hero": ("assets/img/src/hero-2.jpg", "62% 50%"),
-    "kladno": ("assets/img/src/kladno-1.jpg", "40% 60%"),
-    "konzultace": ("assets/img/src/hero-1.jpg", "50% 30%"),
-    "dopisy": ("assets/img/src/documents-1.jpg", "50% 50%"),
+IMAGES = {  # název: object-position (zdroje a velikosti viz tools/images.py)
+    "hero": "62% 50%",
+    "kladno": "40% 60%",
+    "konzultace": "50% 30%",
+    "dopisy": "50% 50%",
 }
-WIDTHS = (800, 1400)
+SIZES = json.loads((ROOT / "assets/img/web/sizes.json").read_text())
+WIDTHS = tuple(SIZES["widths"])
 
 BUBBLES = (
     '<path class="{p}1" d="M11 0H19A11 11 0 0 1 30 11V15A11 11 0 0 1 19 26H0V11A11 11 0 0 1 11 0Z"/>'
@@ -66,24 +71,17 @@ def icon(name):
     return f'<svg class="i" viewBox="0 0 256 256" aria-hidden="true" focusable="false">{inner}</svg>'
 
 
-def build_images(out):
-    """Zmenší fotky (sips) do WebP + JPEG; vrací rozměry pro width/height."""
-    dims = {}
+def copy_images(out):
+    """Zkopíruje předpřipravené fotky; vrací rozměry pro width/height."""
     dest = out / "assets/img"
     dest.mkdir(parents=True, exist_ok=True)
-    for name, (src, _) in IMAGES.items():
-        src_path = ROOT / src
-        for w in WIDTHS:
-            for fmt, ext in (("jpeg", "jpg"),):  # sips neumí zapisovat WebP
-                target = dest / f"{name}-{w}.{ext}"
-                if not target.exists() or target.stat().st_mtime < src_path.stat().st_mtime:
-                    subprocess.run(["sips", "-s", "format", fmt, "-s", "formatOptions", "74", "--resampleWidth", str(w),
-                                    str(src_path), "--out", str(target)], check=True, capture_output=True)
-        info = subprocess.run(["sips", "-g", "pixelWidth", "-g", "pixelHeight", str(src_path)], capture_output=True, text=True).stdout
-        sw = int(re.search(r"pixelWidth: (\d+)", info).group(1))
-        sh = int(re.search(r"pixelHeight: (\d+)", info).group(1))
-        dims[name] = (WIDTHS[-1], round(WIDTHS[-1] * sh / sw))
-    return dims
+    for f in (ROOT / "assets/img/web").glob("*.jpg"):
+        shutil.copy(f, dest / f.name)
+    return {name: tuple(wh) for name, wh in SIZES["images"].items()}
+
+
+def fingerprint(path):
+    return hashlib.sha1((ROOT / path).read_bytes()).hexdigest()[:10]
 
 
 def picture(arg, asset, dims):
@@ -92,7 +90,7 @@ def picture(arg, asset, dims):
     loading = parts[2] if len(parts) > 2 else "lazy"
     cls = parts[3] if len(parts) > 3 else "hero__img"
     w, h = dims[name]
-    pos = IMAGES[name][1]
+    pos = IMAGES[name]
     srcset = ", ".join(f"{asset(f'assets/img/{name}-{x}.jpg')} {x}w" for x in WIDTHS)
     sizes = "(min-width: 900px) 50vw, 100vw"
     prio = ' fetchpriority="high"' if loading == "eager" else ""
@@ -135,7 +133,7 @@ def build(mode):
         shutil.copytree(ROOT / "assets" / sub, out / "assets" / sub, dirs_exist_ok=True)
     for p in (out / "assets/fonts").glob("_*.css"):
         p.unlink()
-    dims = build_images(out)
+    dims = copy_images(out)
     if (ROOT / "assets/img/og.jpg").exists():
         shutil.copy(ROOT / "assets/img/og.jpg", out / "assets/img/og.jpg")
     shutil.copy(ROOT / "assets/img/favicon.svg", out / "assets/img/favicon.svg")
@@ -155,7 +153,8 @@ def build(mode):
             asset = lambda p: p
             link = lambda s: page_url(s, mode)
         else:
-            asset = lambda p: "/" + p
+            # CSS a JS s otiskem obsahu, aby šly cachovat natrvalo (viz vercel.json)
+            asset = lambda p: "/" + p + (f"?v={fingerprint(p)}" if p.endswith((".css", ".js")) else "")
             link = lambda s: page_url(s, mode)
 
         current = ' aria-current="page"'
@@ -175,7 +174,7 @@ def build(mode):
         page = page.replace("{{canonical}}", canonical).replace("{{site}}", SITE)
         page = page.replace("{{robots}}", '<meta name="robots" content="noindex">\n' if meta.get("noindex") else "")
         page = page.replace("{{bodyclass}}", meta.get("bodyclass", "page-" + slug))
-        page = page.replace("{{form_action}}", FORM_ACTION).replace("{{form_endpoint}}", FORM_ENDPOINT)
+        page = page.replace("{{form_action}}", FORM_ACTION).replace("{{form_endpoint}}", "" if mode == "preview" else FORM_ENDPOINT)
         page = re.sub(r"\{\{link:([\w-]+)\}\}", lambda m: link(m.group(1)), page)
         page = re.sub(r"\{\{asset:([^}]+)\}\}", lambda m: asset(m.group(1)), page)
         page = re.sub(r"\{\{icon:([\w-]+)\}\}", lambda m: icon(m.group(1)), page)

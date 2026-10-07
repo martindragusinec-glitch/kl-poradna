@@ -142,6 +142,15 @@
     var sending = false;
     var baseTitle = document.title;
 
+    /* Návrat ze serveru bez JavaScriptu (?chyba=…) */
+    var chyba = new URLSearchParams(location.search).get('chyba');
+    if (chyba) {
+      status.className = 'form-status form-status--error';
+      status.textContent = chyba === 'odeslani'
+        ? 'Zprávu se nepodařilo odeslat. Zkuste to prosím znovu, nebo napište na info@poradnakl.cz.'
+        : 'Formulář obsahuje chyby. Zkontrolujte prosím vyplněná pole.';
+    }
+
     /* Předvybrané téma z odkazu (?tema=najem) */
     var map = { najem: 'tema-najem', dluhy: 'tema-dluhy', davky: 'tema-davky', jine: 'tema-jine' };
     var tema = new URLSearchParams(location.search).get('tema');
@@ -313,7 +322,8 @@
       btn.setAttribute('aria-disabled', 'true');
       status.className = 'form-status';
       status.textContent = 'Odesílám…';
-      var data = new FormData(form);
+      // urlencoded tělo umí Vercel (i obyčejný POST bez JS) rovnou rozparsovat
+      var data = new URLSearchParams(new FormData(form));
       data.append('cas_vyplneni_s', String(Math.round((Date.now() - startedAt) / 1000)));
 
       var done = function (demo) { sending = false; showSuccess(demo); };

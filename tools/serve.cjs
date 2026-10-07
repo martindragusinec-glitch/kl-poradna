@@ -1,4 +1,4 @@
-// Lokální náhled: node poradna-kl/tools/serve.js 8797 [dist|preview]
+// Lokální náhled: node poradna-kl/tools/serve.cjs 8797 [dist|preview]
 // Servíruje dist/ s čistými adresami jako na hostingu; POST /api/kontakt jen potvrdí přijetí (test).
 const http = require('http'), fs = require('fs'), path = require('path');
 const root = path.resolve(__dirname, '..', process.argv[3] || 'dist'), port = +(process.argv[2] || 8797);

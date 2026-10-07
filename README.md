@@ -5,18 +5,39 @@ Statický web (9 stránek + děkovací stránka + 404) pro Poradnu KL, z.ú. Či
 ## Spuštění a sestavení
 
 ```bash
-python3 poradna-kl/tools/build.py          # produkce -> poradna-kl/dist/ (čisté adresy /kontakt/)
-python3 poradna-kl/tools/build.py preview  # náhled -> poradna-kl/preview/ (ploché soubory, pro Artifact)
-node poradna-kl/tools/serve.js 8797        # lokální náhled dist/ na http://localhost:8797
-node poradna-kl/tools/qa.mjs               # axe-core (WCAG 2.2 AA + kontrast AAA) + screenshoty do docs/qa
+npm run build      # python3 tools/build.py -> dist/ (čisté adresy /kontakt/)
+npm run preview    # python3 tools/build.py preview -> preview/ (ploché soubory, formulář v ukázkovém režimu)
+npm run serve      # lokální náhled dist/ na http://localhost:8797 (POST /api/kontakt jen potvrdí)
+npm run images     # jen na macOS: přegeneruje zmenšené fotky do assets/img/web/ (commitují se)
+node tools/og.mjs  # vykreslí OG obrázek assets/img/og.jpg z tools/og/og.html
+node tools/qa.mjs  # axe-core (WCAG 2.2 AA + kontrast AAA) + screenshoty do docs/qa
 ```
 
 - `src/layout.html`: hlavička, menu a patička (společné pro všechny stránky).
 - `src/pages/*.html`: obsah stránek. První řádek obsahuje metadata (title, description).
 - `assets/css/site.css`: celý vizuální systém. Tokeny jsou nahoře.
 - `assets/js/site.js`: menu, formulář, FAQ, kopírování, odškrtávací seznam.
-- `assets/img/src/`: zdrojové fotky a jejich licence v `CREDITS.md`. Build je zmenší.
-- `assets/brand/poradna-kl-znak.svg`: znak loga.
+- `api/kontakt.js`: Vercel funkce, která formulář pošle e-mailem.
+- `assets/img/src/`: zdrojové fotky a jejich licence (`CREDITS.md`).
+- `assets/img/web/`: zmenšené fotky pro web.
+- `assets/brand/`: znak loga.
+
+## Nasazení na Vercel
+
+1. **Import projektu:** na vercel.com → Add New → Project vyber repozitář `kl-poradna`. Framework „Other“. Vše ostatní je ve `vercel.json`:
+   - build `python3 tools/build.py` (jen standardní knihovna Pythonu),
+   - výstup `dist/`, čisté adresy se lomítkem na konci,
+   - bezpečnostní hlavičky a dlouhá cache pro písma, CSS a JS (CSS a JS mají v adrese otisk obsahu).
+2. **Proměnné prostředí** (Settings → Environment Variables):
+   - `RESEND_API_KEY`: klíč z resend.com. Doménu odesílatele je tam potřeba ověřit.
+   - `KONTAKT_FROM`: odesílatel, např. `Web Poradna KL <web@poradnakl.cz>`.
+   - `KONTAKT_TO`: příjemce (výchozí `info@poradnakl.cz`).
+   - `SITE_URL`: finální adresa webu pro canonical, OG a sitemapu (výchozí `https://poradnakl.cz`).
+3. **Doména:** připojit `poradnakl.cz` v Settings → Domains.
+
+Dokud nejsou proměnné nastavené, formulář po odeslání slušně oznámí chybu a nabídne e-mail. Nic se neztratí potichu.
+
+**Pozor na GDPR:** Resend zpracovává data v USA. Pokud mají údaje zůstat v EU, stačí v `api/kontakt.js` vyměnit odeslání za EU službu (SMTP / transakční e-mail) a uvést zpracovatele v zásadách ochrany osobních údajů.
 
 ## Vizuální systém „Rozhovor“
 
@@ -45,7 +66,7 @@ node poradna-kl/tools/qa.mjs               # axe-core (WCAG 2.2 AA + kontrast AA
 
 ## Před spuštěním (DOPLNIT)
 
-- [ ] **Příjem formuláře:** v `tools/build.py` nastavit `FORM_ENDPOINT`. Bez něj formulář běží v ukázkovém režimu a zprávy nikam neodesílá. Server má na `/api/kontakt` přijmout POST, zkontrolovat honeypot `poznamka_k_adrese` a pole `cas_vyplneni_s` a odeslat e-mail.
+- [ ] **Příjem formuláře:** na Vercelu nastavit `RESEND_API_KEY`, `KONTAKT_FROM` a případně `KONTAKT_TO` (viz Nasazení na Vercel). Poslat zkušební žádost.
 - [ ] Doménu (`SITE` v build.py) ověřit u registrátora. poradnakl.cz zatím nemá DNS záznam.
 - [ ] Doplnit IČO, zápis v rejstříku ústavů, datovou schránku a číslo účtu.
 - [ ] Doplnit partnery, loga a odkaz na výroční zprávy (O nás).
@@ -53,7 +74,6 @@ node poradna-kl/tools/qa.mjs               # axe-core (WCAG 2.2 AA + kontrast AA
 - [ ] Prohlášení o přístupnosti: stav souladu a datum.
 - [ ] Ověřit údaje o superdávce, bezbariérovost vstupu a nejbližší zastávku MHD (podle OSM je to Kladno, Nám. starosty Pavla, asi 2 minuty pěšky).
 - [ ] Fotka skutečného vchodu do kanceláře (pomůže lidem trefit). Místo ní zatím slouží ulice z Wikimedia Commons, jejíž licence vyžaduje uvést autora.
-- [ ] OG obrázek `assets/img/og.jpg` (1200×630).
 - [ ] Ostatní body ze zadání (čestné prohlášení, plná moc, seznam akreditovaných dluhových poraden, pojištění).
 
 ## Doporučení z rešerše (zatím neimplementováno)
