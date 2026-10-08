@@ -42,26 +42,16 @@ Dokud nejsou proměnné nastavené, formulář po odeslání slušně oznámí c
 ## Vizuální systém „Rozhovor“
 
 - **Logo:** dvě chatové bubliny, modrá (vy) a žlutá (poradna). Místo, kde se překrývají, symbolizuje porozumění. Znak je v `tools/build.py` (BUBBLES) a v `assets/brand/`.
-- **Barvy:** modrá #2340C8, žlutá #FFCB2E, inkoust #13162B, papír #F4F3EE. Doplňkové odstíny: nebeská, máslová, broskvová.
+- **Barvy „Malina“ (vybral klient 8. 10. 2026):** malinová #8E1B3E (tmavší #6B132D), meruňkový akcent #FFC29E, inkoust #2A1219, papír #F7F3F0. Doplňkové odstíny: růžová #F6DCE3, krémová #FFE8DA, písková #EDE6DC. V CSS se tokeny dál jmenují `--blue` (hlavní) a `--yellow` (akcent).
 - **Písmo:**
   - Nadpisy: Bricolage Grotesque.
   - Text: Atkinson Hyperlegible Next, písmo navržené pro slabozraké. Nula je v něm záměrně přeškrtnutá.
   - Obě písma jsou na webu uložená lokálně, nic se nenačítá z Google.
 - **Fotky:** černobílé s násobením na žluté ploše (duotón), vložené do tvaru bubliny.
 
-## Přepínač barevných kombinací
+## Barvy
 
-Vpravo dole je tlačítko „Barvy“. Volba platí pro celý web (fotky, logo i dekorace) a pamatuje se i na dalších stránkách.
-
-- **Výrazné hero (11):** Rozhovor (původní), Půlnoc, Hlubina, Oliva, Kakao, Víno, Kobalt, Smaragd, Malina, Uhel, Indigo.
-- **Světlé hero (6):** Krém, Šalvěj, Levandule, Písek, Broskev, Nebe. Hero a záhlaví nejsou sytý blok (tokeny `--panel*`).
-- **Vlastní barvy:** hlavní barva + akcent (+ volitelně světlé hero). Odstíny se dopočítají a barvy se automaticky upraví tak, aby text držel kontrast AAA.
-- **Náhodná paleta** pro rychlé proklikání.
-- **Odkazy:** `?paleta=pulnoc`, vlastní `?paleta=vlastni&h=2340C8&a=FFCB2E&svetle=1` (tlačítko „Zkopírovat odkaz na tuto paletu“).
-- **Viditelnost:** na ostré doméně `radanadosah.cz` je přepínač skrytý, zobrazí se s `?barvy`. „Skrýt“ platí jen do zavření záložky.
-- **Ověření:** všech 17 palet i vlastní kombinace prošly axe (kontrast AAA) na 7 stránkách, desktop i mobil.
-- **Natrvalo:** hodnoty vybrané palety z `html[data-palette="…"]` v `assets/css/site.css` se přepíšou do `:root` a přepínač (`initPalette` v `site.js`) se smaže.
-- **Náhled:** `docs/palety-nahled.png`.
+Klient vybral paletu Malina, je natrvalo v `:root` v `assets/css/site.css`. Přepínač palet (17 palet + vlastní barvy) je z webu odstraněný. Najdeš ho v gitu v commitu `7a088dd`, kdyby bylo potřeba vybírat znovu.
 
 ## Přístupnost (cíl WCAG 2.2 AA, kontrast AAA)
 
