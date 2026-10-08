@@ -79,10 +79,12 @@ textarea.a-input { min-height: 110px; resize: vertical; }
 .a-gate__lead { margin-top: 10px; color: var(--ink-2); }
 .a-gate .a-btn--block { margin-top: 8px; }
 .a-gate__back { color: var(--ink-2); font-weight: 600; }
-.a-pass { position: relative; }
-.a-pass .a-input { padding-right: 104px; }
-.a-pass__show { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); margin-top: 4px; min-height: 38px; padding: 0 12px; border: 0; border-radius: 10px; background: var(--paper); font-weight: 700; font-size: .875rem; }
+
+.a-pass { position: relative; margin-top: 8px; }
+.a-pass .a-input { margin-top: 0; padding-right: 124px; }
+.a-pass__show { position: absolute; top: 6px; right: 6px; bottom: 6px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; width: 110px; padding: 0; border: 0; border-radius: 10px; background: var(--paper); font-weight: 700; font-size: .875rem; color: var(--ink); }
 .a-pass__show:hover { background: var(--sky); }
+.a-pass__show i[data-ico] svg { width: 18px; height: 18px; }
 
 /* ---------- Rozvržení aplikace ---------- */
 .a-app { display: grid; grid-template-columns: 256px minmax(0, 1fr); grid-template-rows: 68px minmax(0, 1fr); height: 100%; height: 100dvh; }

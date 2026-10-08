@@ -29,6 +29,7 @@
     plus: svg('<path d="M12 5v14M5 12h14"/>'),
     kos: svg('<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>'),
     oko: svg('<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/>'),
+    okoSkryt: svg('<path d="M3 3l18 18M10.6 5.6A9.7 9.7 0 0 1 12 5.5c6 0 9.5 6.5 9.5 6.5a16 16 0 0 1-2.9 3.6M6.4 6.9A16.3 16.3 0 0 0 2.5 12S6 18.5 12 18.5a9.4 9.4 0 0 0 4.3-1"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>'),
     odhlasit: svg('<path d="M14 4h5v16h-5M10 8l-4 4 4 4M6 12h10"/>'),
     hotovo: svg('<circle cx="12" cy="12" r="9"/><path d="m8 12.5 2.8 2.8L16.5 9.5"/>'),
     tuzka: svg('<path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="m13.5 6.5 4 4"/>')
@@ -106,11 +107,13 @@
   }
   (function () {
     var form = $('#a-login form'), input = $('#a-heslo'), err = $('#a-login-error'), show = $('.a-pass__show');
+    var popisek = function (on) { show.innerHTML = ico(on ? 'okoSkryt' : 'oko') + (on ? 'Skrýt' : 'Zobrazit'); };
+    popisek(false);
     show.addEventListener('click', function () {
       var on = input.type === 'password';
       input.type = on ? 'text' : 'password';
       show.setAttribute('aria-pressed', String(on));
-      show.textContent = on ? 'Skrýt' : 'Zobrazit';
+      popisek(on);
       input.focus();
     });
     form.addEventListener('submit', function (e) {
