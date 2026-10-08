@@ -51,15 +51,17 @@ Dokud nejsou proměnné nastavené, formulář po odeslání slušně oznámí c
 
 ## Přepínač barevných kombinací
 
-Vpravo dole je tlačítko „Barvy“ se sedmi paletami: Rozhovor (původní), Půlnoc, Hlubina, Oliva, Kakao, Víno a Krém. Krém je světlá varianta, kde hero a záhlaví nejsou sytý blok (tokeny `--panel*`).
+Vpravo dole je tlačítko „Barvy“. Volba platí pro celý web (fotky, logo i dekorace) a pamatuje se i na dalších stránkách.
 
-- Změní barvy celého webu včetně fotek, loga a dekorací.
-- Volba se pamatuje i na dalších stránkách.
-- Odkaz na konkrétní paletu: `?paleta=pulnoc` (tlačítko „Zkopírovat odkaz na tuto paletu“).
-- Na ostré doméně `radanadosah.cz` je přepínač skrytý. Zobrazí se s `?barvy`.
-- Všechny palety drží kontrast AAA (ověřeno axe na 7 stránkách, desktop i mobil).
-- **Jak paletu zvolit natrvalo:** hodnoty vybrané palety z bloku `html[data-palette="…"]` v `assets/css/site.css` se přepíšou do `:root` a přepínač (`initPalette` v `site.js`) se smaže.
-- Náhled všech palet: `docs/palety-nahled.png`. Ve Figmě jsou stejné palety jako režimy proměnných „Rada na dosah“ (kromě Krému, který potřebuje vlastní proměnné pro hero).
+- **Výrazné hero (11):** Rozhovor (původní), Půlnoc, Hlubina, Oliva, Kakao, Víno, Kobalt, Smaragd, Malina, Uhel, Indigo.
+- **Světlé hero (6):** Krém, Šalvěj, Levandule, Písek, Broskev, Nebe. Hero a záhlaví nejsou sytý blok (tokeny `--panel*`).
+- **Vlastní barvy:** hlavní barva + akcent (+ volitelně světlé hero). Odstíny se dopočítají a barvy se automaticky upraví tak, aby text držel kontrast AAA.
+- **Náhodná paleta** pro rychlé proklikání.
+- **Odkazy:** `?paleta=pulnoc`, vlastní `?paleta=vlastni&h=2340C8&a=FFCB2E&svetle=1` (tlačítko „Zkopírovat odkaz na tuto paletu“).
+- **Viditelnost:** na ostré doméně `radanadosah.cz` je přepínač skrytý, zobrazí se s `?barvy`. „Skrýt“ platí jen do zavření záložky.
+- **Ověření:** všech 17 palet i vlastní kombinace prošly axe (kontrast AAA) na 7 stránkách, desktop i mobil.
+- **Natrvalo:** hodnoty vybrané palety z `html[data-palette="…"]` v `assets/css/site.css` se přepíšou do `:root` a přepínač (`initPalette` v `site.js`) se smaže.
+- **Náhled:** `docs/palety-nahled.png`.
 
 ## Přístupnost (cíl WCAG 2.2 AA, kontrast AAA)
 

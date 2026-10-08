@@ -68,6 +68,20 @@ html[data-palette="oliva"]   { --blue: #3D4A2C; --blue-deep: #2B3520; --on-blue-
 html[data-palette="kakao"]   { --blue: #4B3329; --blue-deep: #35231C; --on-blue-2: #F8F0EC; --yellow: #F2B8B0; --sky: #ECE1DA; --butter: #F7E4E1; --peach: #EFE7D6; --paper: #F7F2ED; --ink: #241914; --ink-2: #51443E; --logo-b1-dark: var(--sky); }
 html[data-palette="hlubina"] { --blue: #12404A; --blue-deep: #0B2D34; --on-blue-2: #ECF6F5; --yellow: #9FDCC8; --sky: #D8EBE7; --butter: #E7F4EF; --peach: #F1E6D6; --paper: #F2F3EF; --ink: #0F2328; --ink-2: #3B4E52; --logo-b1-dark: var(--sky); }
 html[data-palette="vino"]    { --blue: #6A1F33; --blue-deep: #4E1625; --on-blue-2: #FBF0F2; --yellow: #F3D27F; --sky: #F1DDE2; --butter: #F8EDCD; --peach: #E8E0D5; --paper: #F6F2EC; --ink: #26141B; --ink-2: #534049; --logo-b1-dark: var(--sky); }
+html[data-palette="kobalt"]  { --blue: #2335A8; --blue-deep: #18257A; --on-blue-2: #EEF0FC; --yellow: #FF9DBB; --sky: #DDE2FA; --butter: #FFE0EA; --peach: #F3EEDC; --paper: #F5F4F0; --ink: #121633; --ink-2: #3F4361; --logo-b1-dark: var(--sky); }
+html[data-palette="smaragd"] { --blue: #0E5C45; --blue-deep: #094332; --on-blue-2: #EBF6F1; --yellow: #C8EE6E; --sky: #D4ECE2; --butter: #EEF8D2; --peach: #F2E8D8; --paper: #F3F4EF; --ink: #0F231C; --ink-2: #3A4B45; --logo-b1-dark: var(--sky); }
+html[data-palette="malina"]  { --blue: #8E1B3E; --blue-deep: #6B132D; --on-blue-2: #FDEFF3; --yellow: #FFC29E; --sky: #F6DCE3; --butter: #FFE8DA; --peach: #EDE6DC; --paper: #F7F3F0; --ink: #2A1219; --ink-2: #573F47; --logo-b1-dark: var(--sky); }
+html[data-palette="uhel"]    { --blue: #23262F; --blue-deep: #121419; --on-blue-2: #EEF0F4; --yellow: #FF8A4C; --sky: #E4E6EC; --butter: #FFE2D1; --peach: #EAE6DD; --paper: #F4F4F2; --ink: #15171D; --ink-2: #42454F; --logo-b1-dark: #FFFFFF; }
+html[data-palette="indigo"]  { --blue: #2E2A6E; --blue-deep: #1F1C4E; --on-blue-2: #F0EFFA; --yellow: #F2E85C; --sky: #E2E0F3; --butter: #F8F5CF; --peach: #EFE6DE; --paper: #F5F4F1; --ink: #17152E; --ink-2: #45435A; --logo-b1-dark: var(--sky); }
+/* Světlé hero: společné panelové tokeny pro Krém, Šalvěj, Levanduli, Písek, Broskev, Nebe a vlastní světlou paletu */
+html[data-palette="krem"], html[data-palette="salvej"], html[data-palette="levandule"], html[data-palette="pisek"], html[data-palette="broskev"], html[data-palette="nebe"], html[data-palette-hero="svetle"] {
+  --on-panel: var(--ink); --on-panel-2: var(--ink-2); --panel-accent: var(--blue); --panel-btn: var(--blue); --panel-btn-fg: #FFFFFF; --panel-btn-hover: var(--blue-deep);
+  --panel-chip: rgb(255 255 255 / .75); --panel-line: var(--ink); --panel-soft: rgb(0 0 0 / .04); --panel-deco: var(--sky); }
+html[data-palette="salvej"]    { --panel: #DCE6DA; --blue: #2E5241; --blue-deep: #1F3A2D; --on-blue-2: #EEF5F0; --yellow: #F2B880; --sky: #CFE0CF; --butter: #F7E7CF; --peach: #EFE3D6; --paper: #F6F5F0; --ink: #16231B; --ink-2: #374539; --logo-b1-dark: var(--sky); }
+html[data-palette="levandule"] { --panel: #E3DFF3; --blue: #3A2F7A; --blue-deep: #281F5C; --on-blue-2: #F1EFFA; --yellow: #F5D46A; --sky: #D9D3F0; --butter: #F8EDC6; --peach: #F2DCE6; --paper: #F7F6F3; --ink: #1A1633; --ink-2: #403B56; --logo-b1-dark: var(--sky); }
+html[data-palette="pisek"]     { --panel: #EDE3D1; --blue: #1F2E4D; --blue-deep: #141F36; --on-blue-2: #EEF1F7; --yellow: #F28C6B; --sky: #DCE3EF; --butter: #FADBD0; --peach: #E7EFE3; --paper: #F8F5EF; --ink: #151C2B; --ink-2: #3E4555; --logo-b1-dark: var(--sky); }
+html[data-palette="broskev"]   { --panel: #F7DCCD; --blue: #4D2457; --blue-deep: #371941; --on-blue-2: #F7EEF8; --yellow: #F2C14E; --sky: #EADCEC; --butter: #F9EBC6; --peach: #E3EEE6; --paper: #FAF6F2; --ink: #241327; --ink-2: #513D53; --logo-b1-dark: var(--sky); }
+html[data-palette="nebe"]      { --panel: #DAE8F6; --blue: #1D4E89; --blue-deep: #143A68; --on-blue-2: #EDF4FB; --yellow: #FFB06E; --sky: #CFE0F2; --butter: #FFE4CC; --peach: #EEE9DD; --paper: #F6F7F8; --ink: #12233A; --ink-2: #36445A; --logo-b1-dark: var(--sky); }
 /* Krém: světlé hero bez sytého bloku, hlavní barva terakota jen na tlačítkách a akcentech */
 html[data-palette="krem"]    { --blue: #8A3722; --blue-deep: #6E2B1A; --on-blue-2: #FFF4EE; --yellow: #EBC56A; --sky: #F2DED3; --butter: #F5EBCB; --peach: #DDE3D3; --paper: #FAF7F1; --ink: #231A16; --ink-2: #51463F; --logo-b1-dark: var(--sky);
   --panel: #EFE7DA; --on-panel: var(--ink); --on-panel-2: var(--ink-2); --panel-accent: var(--blue); --panel-btn: var(--blue); --panel-btn-fg: #FFFFFF; --panel-btn-hover: var(--blue-deep);
@@ -635,11 +649,12 @@ main > .section:last-child { padding-bottom: 0; }
 .palette__dots { display: inline-flex; }
 .palette__dots span { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--white); margin-left: -6px; }
 .palette__dots span:first-child { margin-left: 0; }
-.palette__panel { width: min(340px, calc(100vw - 32px)); max-height: min(70vh, 560px); overflow-y: auto; padding: 20px; border-radius: 28px 28px 6px 28px; background: var(--white); color: var(--ink); box-shadow: 0 30px 60px -24px rgb(0 0 0 / .45), 0 0 0 1px var(--line); }
+.palette__panel { width: min(400px, calc(100vw - 32px)); max-height: min(78vh, 720px); overflow-y: auto; padding: 20px; border-radius: 28px 28px 6px 28px; background: var(--white); color: var(--ink); box-shadow: 0 30px 60px -24px rgb(0 0 0 / .45), 0 0 0 1px var(--line); }
 .palette__panel h2 { font-size: 1.375rem; letter-spacing: -.02em; }
 .palette__panel > p { margin-top: 6px; font-size: .9375rem; color: var(--ink-2); }
-.palette__list { list-style: none; padding: 0; margin-top: 14px; display: grid; gap: 8px; }
-.palette__opt { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; width: 100%; min-height: 56px; padding: 10px 14px; border: 2px solid var(--line); border-radius: 18px 18px 18px 4px; background: var(--white); color: var(--ink); font: inherit; font-size: 1rem; font-weight: 700; text-align: left; cursor: pointer; }
+.palette__list { list-style: none; padding: 0; margin-top: 8px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.palette__group { margin-top: 16px; font-size: .8125rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-2); }
+.palette__opt { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; width: 100%; min-height: 52px; padding: 8px 10px; border: 2px solid var(--line); border-radius: 18px 18px 18px 4px; background: var(--white); color: var(--ink); font: inherit; font-size: 1rem; font-weight: 700; text-align: left; cursor: pointer; }
 .palette__opt:hover { border-color: var(--ink); }
 .palette__opt[aria-pressed="true"] { border-color: var(--ink); background: var(--paper); }
 .palette__opt small { display: block; font-size: .8125rem; font-weight: 500; color: var(--ink-2); }
@@ -662,3 +677,18 @@ main > .section:last-child { padding-bottom: 0; }
 @media (max-width: 369px) {
   .site-header .brand__sub { display: none; }
 }
+
+.palette__custom { margin-top: 10px; padding: 14px; border-radius: 18px 18px 18px 4px; background: var(--paper); display: grid; gap: 12px; }
+.palette__colors { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.palette__colors label { display: grid; gap: 6px; font-size: .875rem; font-weight: 700; }
+.palette__colors input[type="color"] { width: 100%; height: 44px; padding: 2px; border: 2px solid var(--ink); border-radius: 12px; background: var(--white); cursor: pointer; }
+.palette__light { display: flex; align-items: center; gap: 10px; font-size: .9375rem; font-weight: 600; cursor: pointer; }
+.palette__light input { width: 22px; height: 22px; accent-color: var(--ink); }
+.palette__custom .btn { min-height: 48px; font-size: 1rem; width: 100%; }
+.palette__note { font-size: .8125rem; color: var(--ink-2); }
+@media (max-width: 380px) { .palette__list { grid-template-columns: 1fr; } }
+
+.palette__opt { grid-template-columns: 1fr auto; grid-template-areas: "dots check" "txt txt"; row-gap: 6px; align-items: center; padding: 10px 12px; }
+.palette__opt .palette__dots { grid-area: dots; }
+.palette__opt .palette__txt { grid-area: txt; line-height: 1.25; }
+.palette__opt .palette__check { grid-area: check; }
