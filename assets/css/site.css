@@ -27,6 +27,18 @@
   --field: #4C5170;
   --error: #B42318;
   --crisis: #FFC2AD;
+  /* Hero a záhlaví podstránek (panel): výchozí = sytá hlavní barva; světlé palety je přepíšou */
+  --panel: var(--blue);
+  --on-panel: var(--on-blue);
+  --on-panel-2: var(--on-blue-2);
+  --panel-accent: var(--yellow);
+  --panel-btn: var(--yellow);
+  --panel-btn-fg: var(--ink);
+  --panel-btn-hover: var(--white);
+  --panel-chip: rgb(19 22 43 / .28);
+  --panel-line: rgb(255 255 255 / .75);
+  --panel-soft: rgb(255 255 255 / .07);
+  --panel-deco: rgb(255 255 255 / .14);
 
   --display: "Satoshi", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --text: "Satoshi", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -51,11 +63,15 @@
 /* ---------- Barevné kombinace (přepínač palet) ----------
    html[data-palette] přepíše jen barevné tokeny; vše ostatní je z nich odvozené.
    Každá paleta drží kontrast: bílý text na hlavní barvě ≥ 7:1, odkazy na papíře ≥ 7:1, akcent na hlavní barvě ≥ 4,5:1. */
-html[data-palette="les"]      { --blue: #1B5440; --blue-deep: #123A2C; --on-blue-2: #F1F7F3; --yellow: #FFB25B; --sky: #D6EBDD; --butter: #FFE9C7; --peach: #F6CDBF; --paper: #F3F2EC; --ink: #132019; --ink-2: #3B4A42; --logo-b1-dark: var(--sky); }
-html[data-palette="petrolej"] { --blue: #0A5560; --blue-deep: #073E46; --on-blue-2: #EEF7F8; --yellow: #FFA889; --sky: #D3ECEE; --butter: #FFE3D6; --peach: #FCE7A8; --paper: #F2F4F3; --ink: #10202A; --ink-2: #3A4A52; --logo-b1-dark: var(--sky); }
-html[data-palette="cihla"]    { --blue: #872B1E; --blue-deep: #661F15; --on-blue-2: #FFF6F2; --yellow: #F7C548; --sky: #F6DCD3; --butter: #FBEBB8; --peach: #DCE6D8; --paper: #F6F2EC; --ink: #1F1A17; --ink-2: #4A403A; --logo-b1-dark: var(--sky); }
-html[data-palette="grafit"]   { --blue: #1C1F2E; --blue-deep: #0B0D14; --on-blue-2: #EEF0F7; --yellow: #CDEB4B; --sky: #E3E6F0; --butter: #EEF7C8; --peach: #FFD6C7; --paper: #F4F4F1; --ink: #14161F; --ink-2: #40434F; --logo-b1-dark: #FFFFFF; }
-html[data-palette="svestka"]  { --blue: #4A2D6B; --blue-deep: #371F52; --on-blue-2: #F5F0FA; --yellow: #FFB8C8; --sky: #E6DDF2; --butter: #FFE4EA; --peach: #FFE8B8; --paper: #F5F3F1; --ink: #1B1426; --ink-2: #463F52; --logo-b1-dark: var(--sky); }
+html[data-palette="pulnoc"]  { --blue: #1E2A4A; --blue-deep: #121A30; --on-blue-2: #EDF0F7; --yellow: #F4A261; --sky: #DEE4EF; --butter: #F7E4CF; --peach: #EDE3D3; --paper: #F6F2EA; --ink: #161B2C; --ink-2: #40455A; --logo-b1-dark: var(--sky); }
+html[data-palette="oliva"]   { --blue: #3D4A2C; --blue-deep: #2B3520; --on-blue-2: #F3F5EC; --yellow: #E9D66B; --sky: #E2E6D3; --butter: #F3EDC8; --peach: #EADCCB; --paper: #F4F2EA; --ink: #1B2015; --ink-2: #41483A; --logo-b1-dark: var(--sky); }
+html[data-palette="kakao"]   { --blue: #4B3329; --blue-deep: #35231C; --on-blue-2: #F8F0EC; --yellow: #F2B8B0; --sky: #ECE1DA; --butter: #F7E4E1; --peach: #EFE7D6; --paper: #F7F2ED; --ink: #241914; --ink-2: #51443E; --logo-b1-dark: var(--sky); }
+html[data-palette="hlubina"] { --blue: #12404A; --blue-deep: #0B2D34; --on-blue-2: #ECF6F5; --yellow: #9FDCC8; --sky: #D8EBE7; --butter: #E7F4EF; --peach: #F1E6D6; --paper: #F2F3EF; --ink: #0F2328; --ink-2: #3B4E52; --logo-b1-dark: var(--sky); }
+html[data-palette="vino"]    { --blue: #6A1F33; --blue-deep: #4E1625; --on-blue-2: #FBF0F2; --yellow: #F3D27F; --sky: #F1DDE2; --butter: #F8EDCD; --peach: #E8E0D5; --paper: #F6F2EC; --ink: #26141B; --ink-2: #534049; --logo-b1-dark: var(--sky); }
+/* Krém: světlé hero bez sytého bloku, hlavní barva terakota jen na tlačítkách a akcentech */
+html[data-palette="krem"]    { --blue: #8A3722; --blue-deep: #6E2B1A; --on-blue-2: #FFF4EE; --yellow: #EBC56A; --sky: #F2DED3; --butter: #F5EBCB; --peach: #DDE3D3; --paper: #FAF7F1; --ink: #231A16; --ink-2: #51463F; --logo-b1-dark: var(--sky);
+  --panel: #EFE7DA; --on-panel: var(--ink); --on-panel-2: var(--ink-2); --panel-accent: var(--blue); --panel-btn: var(--blue); --panel-btn-fg: #FFFFFF; --panel-btn-hover: var(--blue-deep);
+  --panel-chip: rgb(255 255 255 / .75); --panel-line: var(--ink); --panel-soft: rgb(35 26 22 / .04); --panel-deco: var(--sky); }
 
 @media (min-width: 768px) { :root { --fs-body: 1.1875rem; --gutter: 32px; --edge: 20px; } }
 
@@ -171,15 +187,15 @@ a:focus-visible .i { color: var(--ink); }
 
 /* ---------- Hero ---------- */
 .hero { padding: 6px var(--edge) 0; }
-.hero__panel { position: relative; overflow: hidden; display: grid; align-items: center; min-height: calc(100svh - var(--header-h) - 6px - var(--edge)); background: var(--blue); color: var(--on-blue); border-radius: var(--r-panel); }
+.hero__panel { position: relative; overflow: hidden; display: grid; align-items: center; min-height: calc(100svh - var(--header-h) - 6px - var(--edge)); background: var(--panel); color: var(--on-panel); border-radius: var(--r-panel); }
 .hero h1 { font-size: min(var(--fs-h1), 11.5svh); }
 .hero__grid { position: relative; z-index: 1; display: grid; gap: 40px; align-items: center; padding-block: clamp(36px, 5vw, 80px); }
-.hero__eyebrow { display: inline-flex; align-items: center; gap: 10px; padding: 8px 18px 8px 10px; margin-bottom: 26px; border-radius: 999px; background: rgb(19 22 43 / .28); font-size: 1rem; font-weight: 700; color: var(--on-blue); }
-.hero__eyebrow .i { width: 22px; height: 22px; color: var(--yellow); }
-.hero h1 { color: var(--on-blue); max-width: 11ch; }
-.hero h1 em { font-style: normal; color: var(--yellow); }
-.hero .lead { margin-top: 26px; color: var(--on-blue-2); max-width: 30ch; }
-.hero .lead strong { color: var(--white); }
+.hero__eyebrow { display: inline-flex; align-items: center; gap: 10px; padding: 8px 18px 8px 10px; margin-bottom: 26px; border-radius: 999px; background: var(--panel-chip); font-size: 1rem; font-weight: 700; color: var(--on-panel); }
+.hero__eyebrow .i { width: 22px; height: 22px; color: var(--panel-accent); }
+.hero h1 { color: var(--on-panel); max-width: 11ch; }
+.hero h1 em { font-style: normal; color: var(--panel-accent); }
+.hero .lead { margin-top: 26px; color: var(--on-panel-2); max-width: 30ch; }
+.hero .lead strong { color: var(--on-panel); }
 .hero .btn-row { margin-top: 38px; }
 .hero__visual { position: relative; justify-self: center; width: min(100%, 560px); aspect-ratio: 1 / .92; isolation: isolate; }
 .hero__photo { position: absolute; inset: 4% 2% 8% 10%; overflow: hidden; border-radius: 56px 56px 56px 8px; background: var(--yellow); }
@@ -191,7 +207,7 @@ a:focus-visible .i { color: var(--ink); }
 .hero__visual .bubble--c { left: 0; bottom: 6%; z-index: 2; padding: 14px 22px; background: var(--white); color: var(--ink); font-family: var(--display); font-weight: 800; font-size: clamp(1.25rem, .95rem + .9vw, 1.75rem); letter-spacing: -.02em; line-height: 1.1; border-radius: 26px 26px 26px 4px; box-shadow: 0 24px 40px -22px rgb(0 0 0 / .55); }
 .hero__visual .bubble--c span { display: block; font-family: var(--text); font-size: 1rem; font-weight: 650; letter-spacing: 0; color: var(--ink-2); margin-top: 4px; }
 .hero__deco { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
-.hero__deco .bubble { background: rgb(255 255 255 / .07); }
+.hero__deco .bubble { background: var(--panel-soft); }
 .hero__deco .d1 { width: 560px; height: 380px; right: -180px; bottom: -230px; border-radius: 140px 140px 16px 140px; }
 @media (max-width: 599px) { .hero__deco { display: none; } .topic-card__bg { width: 34%; bottom: -30%; right: -10%; } }
 
@@ -322,12 +338,12 @@ a:focus-visible .i { color: var(--ink); }
 
 /* ---------- Záhlaví podstránky ---------- */
 .page-head { padding: 6px var(--edge) 0; }
-.page-head__panel { position: relative; overflow: hidden; background: var(--blue); color: var(--on-blue); border-radius: var(--r-panel); padding-block: clamp(44px, 6vw, 96px); }
+.page-head__panel { position: relative; overflow: hidden; background: var(--panel); color: var(--on-panel); border-radius: var(--r-panel); padding-block: clamp(44px, 6vw, 96px); }
 .page-head__panel .container { position: relative; z-index: 1; }
-.page-head h1 { color: var(--on-blue); max-width: 14ch; font-size: clamp(2.75rem, 1.6rem + 4.4vw, 5.25rem); }
-.page-head .lead { margin-top: 22px; color: var(--on-blue-2); max-width: 52ch; }
+.page-head h1 { color: var(--on-panel); max-width: 14ch; font-size: clamp(2.75rem, 1.6rem + 4.4vw, 5.25rem); }
+.page-head .lead { margin-top: 22px; color: var(--on-panel-2); max-width: 52ch; }
 .page-head .deco { position: absolute; right: clamp(-60px, -3vw, -20px); bottom: clamp(-80px, -5vw, -36px); width: clamp(220px, 26vw, 380px); pointer-events: none; }
-.page-head .deco .b1 { fill: rgb(255 255 255 / .14); } .page-head .deco .b2 { fill: var(--yellow); } .page-head .deco .b3 { fill: var(--ink); }
+.page-head .deco .b1 { fill: var(--panel-deco); } .page-head .deco .b2 { fill: var(--yellow); } .page-head .deco .b3 { fill: var(--ink); }
 @media (max-width: 899px) { .page-head .deco { width: 150px; right: -40px; bottom: -50px; opacity: .5; } }
 @media (max-width: 699px) { .page-head .deco { display: none; } }
 .page-head__chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; padding: 0; list-style: none; }
@@ -596,7 +612,7 @@ main > .section:last-child { padding-bottom: 0; }
   .print-only-checklist .page-head, .print-only-checklist .site-footer, .print-only-checklist .chat-col { display: none !important; }
 }
 
-.page-head .mark, .hero .mark { background: none; color: var(--yellow); font-weight: 800; }
+.page-head .mark, .hero .mark { background: none; color: var(--panel-accent); font-weight: 800; }
 .mission-photo img { filter: grayscale(1) contrast(1.05) brightness(1.4); }
 
 @media (min-width: 960px) and (max-height: 820px) {
@@ -605,6 +621,12 @@ main > .section:last-child { padding-bottom: 0; }
   .hero .lead { margin-top: 18px; }
   .hero .btn-row { margin-top: 26px; }
 }
+
+/* Tlačítka uvnitř hero se řídí panelem (na světlém hero je hlavní tlačítko v hlavní barvě) */
+.hero__panel .btn--sun { background: var(--panel-btn); color: var(--panel-btn-fg); }
+.hero__panel .btn--sun:hover { background: var(--panel-btn-hover); }
+.hero__panel .btn--ghost-light { color: var(--on-panel); border-color: var(--panel-line); }
+.hero__panel .btn--ghost-light:hover { background: var(--on-panel); color: var(--panel); border-color: var(--on-panel); }
 
 /* ---------- Přepínač barev (nástroj pro výběr palety, na ostré doméně skrytý) ---------- */
 .palette { position: fixed; right: max(16px, env(safe-area-inset-right, 0px)); bottom: max(16px, env(safe-area-inset-bottom, 0px)); z-index: 90; display: flex; flex-direction: column; align-items: flex-end; gap: 10px; font-family: var(--text); }

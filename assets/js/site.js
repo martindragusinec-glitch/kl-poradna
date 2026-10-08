@@ -344,12 +344,13 @@
      Nástroj pro výběr palety s klientem. Na ostré doméně (poradnakl.cz) je skrytý,
      zobrazí se s ?barvy. Odkaz na konkrétní paletu: ?paleta=les */
   var PALETTES = [
-    { id: 'rozhovor', name: 'Rozhovor', note: 'modrá a žlutá', c: ['#2340C8', '#FFCB2E', '#DCE4FF'] },
-    { id: 'les', name: 'Les', note: 'zelená a meruňková', c: ['#1B5440', '#FFB25B', '#D6EBDD'] },
-    { id: 'petrolej', name: 'Petrolej', note: 'petrolejová a korálová', c: ['#0A5560', '#FFA889', '#D3ECEE'] },
-    { id: 'cihla', name: 'Cihla', note: 'cihlová a hořčicová', c: ['#872B1E', '#F7C548', '#F6DCD3'] },
-    { id: 'grafit', name: 'Grafit', note: 'grafitová a limetková', c: ['#1C1F2E', '#CDEB4B', '#E3E6F0'] },
-    { id: 'svestka', name: 'Švestka', note: 'švestková a růžová', c: ['#4A2D6B', '#FFB8C8', '#E6DDF2'] }
+    { id: 'rozhovor', name: 'Rozhovor', note: 'původní modrá a žlutá', c: ['#2340C8', '#FFCB2E', '#DCE4FF'] },
+    { id: 'pulnoc', name: 'Půlnoc', note: 'noční modrá a meruňková', c: ['#1E2A4A', '#F4A261', '#DEE4EF'] },
+    { id: 'hlubina', name: 'Hlubina', note: 'tmavě tyrkysová a mořská pěna', c: ['#12404A', '#9FDCC8', '#D8EBE7'] },
+    { id: 'oliva', name: 'Oliva', note: 'olivová a citronová', c: ['#3D4A2C', '#E9D66B', '#E2E6D3'] },
+    { id: 'kakao', name: 'Kakao', note: 'kakaová a pudrově růžová', c: ['#4B3329', '#F2B8B0', '#ECE1DA'] },
+    { id: 'vino', name: 'Víno', note: 'vínová a máslová', c: ['#6A1F33', '#F3D27F', '#F1DDE2'] },
+    { id: 'krem', name: 'Krém', note: 'světlé, terakota jako akcent', c: ['#EFE7DA', '#8A3722', '#EBC56A'] }
   ];
   function initPalette() {
     var params = new URLSearchParams(location.search);
