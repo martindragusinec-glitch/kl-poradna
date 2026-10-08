@@ -47,9 +47,9 @@
         '<p class="upravy__hint">Klikněte na text a přepište ho. Tučně: ' + (MAC ? '⌘B' : 'Ctrl+B') + '. Nový řádek: Shift+Enter.</p></div>' +
       '<p class="upravy__status" role="status" aria-live="polite"></p>' +
       '<div class="upravy__actions">' +
-        '<button type="button" class="upravy__btn upravy__btn--main" data-a="publish" disabled>Zveřejnit<span class="upravy__long"> změny</span> <span class="upravy__count">0</span></button>' +
+        '<button type="button" class="upravy__btn upravy__btn--main" data-a="publish" disabled><span>Zveřejnit<span class="upravy__long"> změny</span></span><span class="upravy__count">0</span></button>' +
         '<button type="button" class="upravy__btn" data-a="discard" disabled>Zahodit</button>' +
-        '<button type="button" class="upravy__btn upravy__btn--link" data-a="end">Ukončit<span class="upravy__long"> úpravy</span></button>' +
+        '<button type="button" class="upravy__btn upravy__btn--link" data-a="end"><span>Ukončit<span class="upravy__long"> úpravy</span></span></button>' +
         '<button type="button" class="upravy__btn upravy__btn--link" data-a="logout" hidden>Odhlásit</button>' +
       '</div>';
     document.body.appendChild(bar);
@@ -79,14 +79,16 @@
           '<h2 id="upravy-login-title">Úpravy webu</h2>' +
           '<p>Zadejte heslo, které jste dostali od správce webu.</p>' +
           '<label for="upravy-heslo">Heslo</label>' +
-          '<input id="upravy-heslo" type="password" autocomplete="current-password" required aria-describedby="upravy-chyba">' +
+          '<input id="upravy-heslo" type="password" autocomplete="current-password" autocapitalize="off" spellcheck="false" required aria-describedby="upravy-chyba">' +
+          '<label class="upravy-login__show"><input type="checkbox" data-a="show"> Zobrazit heslo</label>' +
           '<p class="upravy-login__error" id="upravy-chyba" role="alert"></p>' +
           '<div class="upravy-login__actions"><button type="submit" class="upravy__btn upravy__btn--main">Přihlásit</button>' +
           '<button type="button" class="upravy__btn upravy__btn--link" data-a="cancel">Zrušit</button></div>' +
         '</form>';
       document.body.appendChild(dialog);
       var form = dialog.querySelector('form');
-      var input = dialog.querySelector('input');
+      var input = dialog.querySelector('#upravy-heslo');
+      dialog.querySelector('[data-a="show"]').addEventListener('change', function (e) { input.type = e.target.checked ? 'text' : 'password'; });
       var err = dialog.querySelector('.upravy-login__error');
       var btn = form.querySelector('[type="submit"]');
       // Bez přihlášení není co upravovat; při vypršeném přihlášení ale neuložené změny nezahazovat
@@ -106,13 +108,13 @@
             if (zapnuto) say('Přihlášeno. Klikněte znovu na „Zveřejnit změny“.'); else enable();
             return;
           }
-          err.textContent = r.status === 401 ? 'Heslo nesedí. Zkuste to znovu.' : 'Přihlášení se nepovedlo. Zkuste to za chvíli znovu.';
+          err.textContent = r.status === 401 ? 'Heslo nesedí. Zkontrolujte velká a malá písmena a české klávesnici (čísla, y/z), případně zaškrtněte „Zobrazit heslo“.' : 'Přihlášení se nepovedlo. Zkuste to za chvíli znovu.';
           input.select();
         });
       });
     }
     dialog.showModal();
-    dialog.querySelector('input').focus();
+    dialog.querySelector('#upravy-heslo').focus();
   }
 
   /* ---------- Úpravy ---------- */

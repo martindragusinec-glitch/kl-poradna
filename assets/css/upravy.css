@@ -58,6 +58,8 @@
 .upravy-login label { display: block; margin-top: 20px; font-weight: 700; }
 .upravy-login input { display: block; width: 100%; min-height: 52px; margin-top: 8px; padding: 0 14px; border: 2px solid var(--field); border-radius: var(--r-field); font: inherit; font-size: 1.125rem; color: var(--ink); background: var(--white); }
 .upravy-login input:focus { outline: 3px solid var(--ink); outline-offset: 2px; }
+.upravy-login label.upravy-login__show { display: inline-flex; align-items: center; gap: 10px; margin-top: 12px; font-weight: 600; cursor: pointer; }
+.upravy-login__show input { width: 22px; height: 22px; min-height: 0; margin: 0; accent-color: var(--ink); }
 .upravy-login__error { color: var(--error) !important; font-weight: 700; min-height: 1.4em; }
 .upravy-login__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
 .upravy-login .upravy__btn--link { color: var(--ink); }

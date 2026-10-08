@@ -15,8 +15,10 @@
 
 import crypto from 'node:crypto';
 
-const HESLO = process.env.UPRAVY_HESLO || '';
-const TOKEN = process.env.UPRAVY_GITHUB_TOKEN || '';
+// Hodnoty vložené do Vercelu často nesou mezeru, konec řádku nebo uvozovky navíc; diakritika může přijít rozložená (NFD)
+const cisti = (s) => String(s ?? '').normalize('NFC').trim().replace(/^(["'])(.*)\1$/s, '$2');
+const HESLO = cisti(process.env.UPRAVY_HESLO);
+const TOKEN = cisti(process.env.UPRAVY_GITHUB_TOKEN);
 const LOKALNE = process.env.UPRAVY_LOKALNE === '1';
 const REPO = process.env.UPRAVY_REPO
   || (process.env.VERCEL_GIT_REPO_OWNER && process.env.VERCEL_GIT_REPO_SLUG ? `${process.env.VERCEL_GIT_REPO_OWNER}/${process.env.VERCEL_GIT_REPO_SLUG}` : 'martindragusinec-glitch/kl-poradna');
@@ -42,7 +44,7 @@ function cookie(res, hodnota, maxAge) {
   res.setHeader('Set-Cookie', `${COOKIE}=${hodnota}; Path=/api/upravit; HttpOnly; Secure; SameSite=Strict; Max-Age=${maxAge}`);
 }
 function hesloSedi(zadane) {
-  const a = crypto.createHash('sha256').update(String(zadane)).digest();
+  const a = crypto.createHash('sha256').update(cisti(zadane)).digest();
   const b = crypto.createHash('sha256').update(HESLO).digest();
   return HESLO.length > 0 && crypto.timingSafeEqual(a, b);
 }
