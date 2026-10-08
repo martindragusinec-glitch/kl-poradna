@@ -5,7 +5,7 @@ const root = path.resolve(__dirname, '..', process.argv[3] || 'dist'), port = +(
 const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.woff2': 'font/woff2', '.xml': 'application/xml', '.txt': 'text/plain' };
 http.createServer((req, res) => {
   let p = decodeURIComponent(req.url.split('?')[0].split('#')[0]);
-  if (req.method === 'POST' && p === '/api/kontakt') { res.writeHead(200, { 'Content-Type': 'application/json' }); return res.end('{"ok":true}'); }
+  if (req.method === 'POST' && p.replace(/\/$/, '') === '/api/kontakt') { res.writeHead(200, { 'Content-Type': 'application/json' }); return res.end('{"ok":true}'); }
   let f = path.join(root, p);
   if (!f.startsWith(root)) { res.writeHead(403); return res.end(); }
   if (p.endsWith('/')) f = path.join(f, 'index.html');

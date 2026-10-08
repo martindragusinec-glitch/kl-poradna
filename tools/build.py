@@ -21,8 +21,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 SITE = os.environ.get("SITE_URL", "https://poradnakl.cz").rstrip("/")   # DOPLNIT: finální doména
-FORM_ENDPOINT = os.environ.get("FORM_ENDPOINT", "/api/kontakt")          # Vercel funkce api/kontakt.js
-FORM_ACTION = "/api/kontakt"                                             # záloha bez JavaScriptu (POST)
+FORM_ENDPOINT = os.environ.get("FORM_ENDPOINT", "/api/kontakt/")          # Vercel funkce api/kontakt.js
+FORM_ACTION = "/api/kontakt/"                                            # záloha bez JavaScriptu (POST)
 
 NAV = [
     ("uvod", "Úvod"),
