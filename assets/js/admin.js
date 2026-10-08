@@ -637,7 +637,7 @@
     });
     var d = drawer('Změny ke zveřejnění', html,
       '<button type="button" class="a-btn a-btn--primary a-btn--block" data-zverejnit>Zveřejnit ' + n + ' ' + (n === 1 ? 'změnu' : n < 5 ? 'změny' : 'změn') + '</button>' +
-      '<p class="a-note">Na webu to bude zhruba do minuty. Každou změnu jde později vrátit v Historii.</p>');
+      '<p class="a-note">Na webu to bude zhruba za půl minuty. Každou změnu jde později vrátit v Historii.</p>');
     $('#a-drawer-body').onclick = function (e) {
       var u = e.target.closest('[data-ukazat]'), z = e.target.closest('[data-zahodit]');
       if (u) { d.close(); jdi(u.getAttribute('data-ukazat'), u.getAttribute('data-k')); }
@@ -714,33 +714,46 @@
   function obnovitNahled() {
     try { scrollPo = frame.contentWindow.scrollY; frame.contentWindow.location.reload(); } catch (e) { jdi(aktualni || 'uvod'); }
   }
+  // Hotovo je, až web sám ukáže novou verzi (/verze.json se sestaví s sha commitu). Stav z GitHubu jen hlídá chybu
+  // nasazení a lokálně (bez Vercelu) potvrdí dokončení.
+  var stopky = null;
   function sledovat() {
     var p = cekajici();
     if (!p) { zamknout(false); return; }
     zamknout(true);
-    var pomale = Date.now() - p.at > 2 * 60 * 1000;
     $('#a-busy-title').textContent = 'Zveřejňuji změny…';
-    $('#a-busy-text').textContent = pomale
-      ? 'Trvá to déle než obvykle. Ještě chvíli prosím počkejte.'
-      : 'Web se právě znovu sestavuje. Obvykle to trvá do minuty, pak se náhled sám obnoví.';
-    api('stav&sha=' + encodeURIComponent(p.sha)).then(function (r) {
+    if (!stopky) stopky = setInterval(function () {
+      var q = cekajici();
+      if (!q) return;
+      var s = Math.round((Date.now() - q.at) / 1000);
+      $('#a-busy-text').textContent = s < 45
+        ? 'Web se znovu sestavuje, obvykle to trvá kolem 30 sekund. Zatím ' + s + ' s.'
+        : 'Trvá to déle než obvykle (' + s + ' s). Ještě chvíli prosím počkejte.';
+      $('#a-busy-bar').style.width = Math.min(95, s / 35 * 100) + '%';
+    }, 500);
+    var hotovo = function (chyba) {
+      store.del(KEY.zverejneni);
+      clearInterval(stopky);
+      stopky = null;
+      $('#a-busy-bar').style.width = '0';
+      zamknout(false);
+      obnovitNahled();
+      if (chyba) toast('Zveřejnění se nepovedlo, web zůstává v předchozí podobě. Dejte prosím vědět správci webu.', 'error');
+      else toast('Hotovo! Změny jsou na webu.', 'ok', $('#a-open').getAttribute('href'));
+    };
+    var verze = fetch('/verze.json?t=' + Date.now(), { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : {}; })
+      .catch(function () { return {}; });
+    var stav = api('stav&sha=' + encodeURIComponent(p.sha));
+    Promise.all([verze, stav]).then(function (x) {
+      if (!cekajici()) return;
+      var v = x[0], r = x[1];
       if (r.status === 401) { prihlaseni(function () { brana('a-app'); sledovat(); }); return; }
-      var hotovo = function () {
-        store.del(KEY.zverejneni);
-        zamknout(false);
-        obnovitNahled();
-        toast('Hotovo! Změny jsou na webu.', 'ok', $('#a-open').getAttribute('href'));
-      };
-      if (r.nasazeni === 'success') return hotovo();
-      if (r.nasazeni === 'nezname') { setTimeout(hotovo, Math.max(0, 50000 - (Date.now() - p.at))); return; }
-      if (r.nasazeni === 'failure' || r.nasazeni === 'error') {
-        store.del(KEY.zverejneni);
-        zamknout(false);
-        obnovitNahled();
-        toast('Zveřejnění se nepovedlo, web zůstává v předchozí podobě. Dejte prosím vědět správci webu.', 'error');
-        return;
-      }
-      setTimeout(sledovat, 4000);
+      if (v.sha === p.sha || r.nasazeni === 'success') return hotovo();
+      if (r.nasazeni === 'failure' || r.nasazeni === 'error') return hotovo(true);
+      // Mezitím mohla vyjít i novější verze (jiný commit): po 90 s už nečekat donekonečna
+      if (Date.now() - p.at > 90000) return hotovo();
+      setTimeout(sledovat, 2500);
     });
   }
 
@@ -764,7 +777,7 @@
       $('#a-drawer-body').onclick = function (e) {
         var b = e.target.closest('[data-vratit]');
         if (!b) return;
-        if (!confirm('Vrátit změnu z ' + b.getAttribute('data-kdy') + '?\n\nTexty se vrátí do podoby, jakou měly před ní. Na webu to bude zhruba do minuty.')) return;
+        if (!confirm('Vrátit změnu z ' + b.getAttribute('data-kdy') + '?\n\nTexty se vrátí do podoby, jakou měly před ní. Na webu to bude zhruba za půl minuty.')) return;
         b.disabled = true;
         api('vratit', { sha: b.getAttribute('data-vratit') }).then(function (v) {
           if (v.ok) { $('#a-drawer').close(); store.set(KEY.zverejneni, { sha: v.sha, at: Date.now() }); sledovat(); return; }

@@ -212,6 +212,8 @@ def build(mode):
 
     if mode != "preview":
         build_admin(out)
+        # Správa webu podle toho pozná, že je nová verze opravdu venku (Vercel nastaví sha commitu při buildu)
+        (out / "verze.json").write_text(json.dumps({"sha": os.environ.get("VERCEL_GIT_COMMIT_SHA", "")}))
         (out / "sitemap.xml").write_text(
             '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
             + "".join(f"  <url><loc>{u}</loc></url>\n" for u in sitemap) + "</urlset>\n")

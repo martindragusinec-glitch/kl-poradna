@@ -82,6 +82,15 @@
           "value": "no-store"
         }
       ]
+    },
+    {
+      "source": "/verze.json",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
+      ]
     }
   ],
   "redirects": [
