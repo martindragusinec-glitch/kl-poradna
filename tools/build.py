@@ -112,7 +112,7 @@ ORG = {
     "@type": ["NGO", "LegalService"],
     "name": "Poradna KL, z.ú.",
     "alternateName": "Poradna KL",
-    "description": "Bezplatné právní poradenství pro lidi v sociální nouzi v Kladně: nájem, dluhy, sociální dávky.",
+    "description": "Bezplatné právní poradenství pro lidi v sociální nouzi na Kladně: nájem, dluhy, sociální dávky.",
     "url": SITE + "/",
     "email": "info@poradnakl.cz",
     "isAccessibleForFree": True,
@@ -184,7 +184,7 @@ def build(mode):
             sys.exit(f"{src.name}: nenahrazené značky {leftover}")
         if mode == "preview" and slug == "uvod":
             # Artifact obalí hlavní stránku vlastní kostrou dokumentu: jen obsah hlavy a těla
-            page = page.replace("<title>Poradna KL – bezplatná poradna v Kladně</title>", "<title>Poradna KL</title>")
+            page = page.replace("<title>Poradna KL – bezplatná poradna na Kladně</title>", "<title>Poradna KL</title>")
             page = re.sub(r"<!doctype html>\s*<html[^>]*>\s*<head>", "", page)
             page = re.sub(r"</head>\s*<body([^>]*)>", lambda m: '<script>document.documentElement.lang="cs";document.body.className="page-home"</script>', page)
             page = page.replace("</body>", "").replace("</html>", "")
