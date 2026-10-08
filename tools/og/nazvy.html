@@ -1,0 +1,25 @@
+<!doctype html><html lang="cs"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<style>
+ body{margin:0;background:#E9E8E3;padding:28px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px;width:1500px;box-sizing:border-box}
+ .t{background:var(--paper);border-radius:28px;padding:34px 34px 28px;display:grid;gap:16px;align-content:start}
+ .t.d{background:var(--blue)}
+ .t .brand__mark{width:58px}.t .brand__name{font-size:2rem}.t .brand__sub{font-size:.95rem;margin-top:7px}
+ .t p{font-size:15px;color:var(--ink-2);line-height:1.45;font-weight:500}
+ .t.d p{color:var(--on-blue-2)}
+ .n{font:700 13px var(--text);color:var(--ink-2);text-transform:none}
+ .t.d .n{color:var(--yellow)}
+ .t.d .brand__b1{fill:#fff}
+</style></head><body>
+<script>
+const M='<svg class="brand__mark" viewBox="0 0 48 38"><path class="brand__b1" d="M11 0H19A11 11 0 0 1 30 11V15A11 11 0 0 1 19 26H0V11A11 11 0 0 1 11 0Z"/><path class="brand__b2" d="M29 12H37A11 11 0 0 1 48 23V38H29A11 11 0 0 1 18 27V23A11 11 0 0 1 29 12Z"/><path class="brand__b3" d="M29 12H30V15A11 11 0 0 1 19 26H18V23A11 11 0 0 1 29 12Z"/></svg>';
+const N=[
+ ['1 · váš návrh','Rada <span>na dosah</span>','bezplatná poradna na Kladně','Říká, že pomoc je blízko a snadno dostupná. Volná doména radanadosah.cz.'],
+ ['2','Na <span>slovíčko</span>','bezplatná poradna na Kladně','„Pojďte na slovíčko.“ Lidské, nízkoprahové, sedí k logu bublin. Volná poradnanaslovicko.cz.'],
+ ['3','Jasná <span>rada</span>','bezplatná poradna na Kladně','Slib srozumitelnosti v názvu. Krátké, dobře se pamatuje. Volná jasnarada.cz.'],
+ ['4','Poradna <span>Na rovinu</span>','bezplatná poradna na Kladně','Mluvíme na rovinu, bez právničiny. Volná poradnanarovinu.cz.'],
+ ['5','Mezi <span>řádky</span>','bezplatná poradna na Kladně','Pomůžeme přečíst úřední dopis i výzvu exekutora. Volná poradnameziradky.cz.'],
+ ['6','Kladenská <span>poradna</span>','bezplatná pomoc s nájmem, dluhy a dávkami','Nejjasnější a nejlépe dohledatelné na Googlu. Volná kladenskaporadna.cz.'],
+];
+document.write(N.map((x,i)=>`<div class="t${i===0?' d':''}"><span class="n">${x[0]}</span><span class="brand${i===0?' brand--light':''}">${M}<span><span class="brand__name">${x[1]}</span><span class="brand__sub">${x[2]}</span></span></span><p>${x[3]}</p></div>`).join(''));
+</script></body></html>

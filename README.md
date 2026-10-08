@@ -1,4 +1,4 @@
-# Poradna KL – web
+# Rada na dosah – web
 
 Statický web (9 stránek + děkovací stránka + 404) pro Poradnu KL, z.ú. Čisté HTML/CSS/JS, bez frameworku, bez cookies a bez sledování.
 
@@ -30,10 +30,10 @@ node tools/qa.mjs  # axe-core (WCAG 2.2 AA + kontrast AAA) + screenshoty do docs
    - bezpečnostní hlavičky a dlouhá cache pro písma, CSS a JS (CSS a JS mají v adrese otisk obsahu).
 2. **Proměnné prostředí** (Settings → Environment Variables):
    - `RESEND_API_KEY`: klíč z resend.com. Doménu odesílatele je tam potřeba ověřit.
-   - `KONTAKT_FROM`: odesílatel, např. `Web Poradna KL <web@poradnakl.cz>`.
-   - `KONTAKT_TO`: příjemce (výchozí `info@poradnakl.cz`).
-   - `SITE_URL`: finální adresa webu pro canonical, OG a sitemapu (výchozí `https://poradnakl.cz`).
-3. **Doména:** připojit `poradnakl.cz` v Settings → Domains.
+   - `KONTAKT_FROM`: odesílatel, např. `Web Rada na dosah <web@radanadosah.cz>`.
+   - `KONTAKT_TO`: příjemce (výchozí `info@radanadosah.cz`).
+   - `SITE_URL`: finální adresa webu pro canonical, OG a sitemapu (výchozí `https://radanadosah.cz`).
+3. **Doména:** připojit `radanadosah.cz` v Settings → Domains.
 
 Dokud nejsou proměnné nastavené, formulář po odeslání slušně oznámí chybu a nabídne e-mail. Nic se neztratí potichu.
 
@@ -56,10 +56,10 @@ Vpravo dole je tlačítko „Barvy“ se sedmi paletami: Rozhovor (původní), P
 - Změní barvy celého webu včetně fotek, loga a dekorací.
 - Volba se pamatuje i na dalších stránkách.
 - Odkaz na konkrétní paletu: `?paleta=pulnoc` (tlačítko „Zkopírovat odkaz na tuto paletu“).
-- Na ostré doméně `poradnakl.cz` je přepínač skrytý. Zobrazí se s `?barvy`.
+- Na ostré doméně `radanadosah.cz` je přepínač skrytý. Zobrazí se s `?barvy`.
 - Všechny palety drží kontrast AAA (ověřeno axe na 7 stránkách, desktop i mobil).
 - **Jak paletu zvolit natrvalo:** hodnoty vybrané palety z bloku `html[data-palette="…"]` v `assets/css/site.css` se přepíšou do `:root` a přepínač (`initPalette` v `site.js`) se smaže.
-- Náhled všech palet: `docs/palety-nahled.png`. Ve Figmě jsou stejné palety jako režimy proměnných „Poradna KL“ (kromě Krému, který potřebuje vlastní proměnné pro hero).
+- Náhled všech palet: `docs/palety-nahled.png`. Ve Figmě jsou stejné palety jako režimy proměnných „Rada na dosah“ (kromě Krému, který potřebuje vlastní proměnné pro hero).
 
 ## Přístupnost (cíl WCAG 2.2 AA, kontrast AAA)
 
@@ -79,7 +79,7 @@ Vpravo dole je tlačítko „Barvy“ se sedmi paletami: Rozhovor (původní), P
 ## Před spuštěním (DOPLNIT)
 
 - [ ] **Příjem formuláře:** na Vercelu nastavit `RESEND_API_KEY`, `KONTAKT_FROM` a případně `KONTAKT_TO` (viz Nasazení na Vercel). Poslat zkušební žádost.
-- [ ] Doménu (`SITE` v build.py) ověřit u registrátora. poradnakl.cz zatím nemá DNS záznam.
+- [ ] Doménu (`SITE` v build.py) ověřit u registrátora. radanadosah.cz zatím nemá DNS záznam.
 - [ ] Doplnit IČO, zápis v rejstříku ústavů, datovou schránku a číslo účtu.
 - [ ] Doplnit partnery, loga a odkaz na výroční zprávy (O nás).
 - [ ] Doplnit zásady ochrany osobních údajů: doby uchování, zpracovatele, cookies (web žádné nepoužívá), datum. Doplnit i to, že rozepsaný formulář se ukládá jen v prohlížeči do zavření záložky.

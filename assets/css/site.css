@@ -169,7 +169,7 @@ a:focus-visible .i { color: var(--ink); }
 .nav__cta { margin-left: 10px; }
 .nav__cta .btn { min-height: 50px; padding: .55em 1.25em; font-size: 1.0625rem; }
 .nav-toggle { display: none; }
-@media (max-width: 1239px) {
+@media (max-width: 1359px) {
   .js .nav-toggle { display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 18px 0 14px; border: 2px solid var(--ink); border-radius: 999px; background: transparent; color: var(--ink); font: inherit; font-size: 1.0625rem; font-weight: 700; cursor: pointer; }
   .nav-toggle .i { width: 24px; height: 24px; }
   .nav-toggle[aria-expanded="true"] { background: var(--ink); color: var(--paper); }
@@ -650,3 +650,15 @@ main > .section:last-child { padding-bottom: 0; }
 .palette__actions button { min-height: 44px; padding: 0; border: 0; background: none; color: var(--ink); font: inherit; font-size: .9375rem; font-weight: 700; text-decoration: underline; text-underline-offset: .2em; cursor: pointer; }
 .palette__status { font-size: .875rem; color: var(--ink-2); min-height: 1.2em; }
 @media print { .palette { display: none !important; } }
+
+/* Delší název „Rada na dosah“: menší logo na úzkých telefonech */
+@media (max-width: 429px) {
+  .site-header .brand { gap: 10px; }
+  .site-header .brand__mark { width: 40px; }
+  .site-header .brand__name { font-size: 1.3125rem; }
+  .site-header .brand__sub { font-size: .75rem; }
+  .js .nav-toggle { padding: 0 14px 0 12px; }
+}
+@media (max-width: 369px) {
+  .site-header .brand__sub { display: none; }
+}

@@ -1,8 +1,8 @@
 // Vercel Serverless Function: příjem formuláře „Požádat o schůzku“ a odeslání e-mailem přes Resend.
 // Proměnné prostředí (Vercel → Settings → Environment Variables):
 //   RESEND_API_KEY  klíč z https://resend.com (doména odesílatele musí být ověřená)
-//   KONTAKT_FROM    odesílatel, např. "Web Poradna KL <web@poradnakl.cz>"
-//   KONTAKT_TO      příjemce, výchozí info@poradnakl.cz
+//   KONTAKT_FROM    odesílatel, např. "Web Rada na dosah <web@radanadosah.cz>"
+//   KONTAKT_TO      příjemce, výchozí info@radanadosah.cz
 // Bez nastavení vrací 503 a formulář uživateli nabídne napsat e-mailem. Data se nikam neukládají.
 
 const TEMATA = ['Nájem a bydlení', 'Dluhy a exekuce', 'Sociální dávky', 'Jiné'];
@@ -43,11 +43,11 @@ export default async function handler(req, res) {
 
   const key = process.env.RESEND_API_KEY;
   const from = process.env.KONTAKT_FROM;
-  const to = process.env.KONTAKT_TO || 'info@poradnakl.cz';
+  const to = process.env.KONTAKT_TO || 'info@radanadosah.cz';
   if (!key || !from) return reply(503, { ok: false, error: 'not-configured' }, '/kontakt/?chyba=odeslani#formular');
 
   const text = [
-    'Nová žádost o schůzku z webu Poradna KL',
+    'Nová žádost o schůzku z webu Rada na dosah',
     '',
     `Jméno a příjmení: ${data.jmeno}`,
     `Telefon: ${data.telefon || '–'}`,

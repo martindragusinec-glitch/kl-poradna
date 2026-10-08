@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Sestaví web Poradna KL ze šablony src/layout.html a stránek src/pages/*.html.
+"""Sestaví web Rada na dosah ze šablony src/layout.html a stránek src/pages/*.html.
 
   python3 tools/build.py            -> dist/     (produkce: čisté adresy /kontakt/, absolutní cesty; build na Vercelu)
   python3 tools/build.py preview    -> preview/  (náhled: ploché soubory kontakt.html, relativní cesty, formulář v ukázkovém režimu)
 
 Build používá jen standardní knihovnu Pythonu. Fotky se zmenšují zvlášť (tools/images.py, macOS) do assets/img/web/.
-Proměnné prostředí: SITE_URL (výchozí https://poradnakl.cz), FORM_ENDPOINT (výchozí /api/kontakt).
+Proměnné prostředí: SITE_URL (výchozí https://radanadosah.cz), FORM_ENDPOINT (výchozí /api/kontakt).
 
 Zástupné značky ve stránkách:
   {{link:slug}}  {{asset:cesta}}  {{icon:nazev}}  {{picture:nazev|alt|eager/lazy|trida}}  {{logo}}
@@ -20,7 +20,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-SITE = os.environ.get("SITE_URL", "https://poradnakl.cz").rstrip("/")   # DOPLNIT: finální doména
+SITE = os.environ.get("SITE_URL", "https://radanadosah.cz").rstrip("/")   # DOPLNIT: finální doména
 FORM_ENDPOINT = os.environ.get("FORM_ENDPOINT", "/api/kontakt/")          # Vercel funkce api/kontakt.js
 FORM_ACTION = "/api/kontakt/"                                            # záloha bez JavaScriptu (POST)
 
@@ -110,11 +110,11 @@ def faq_jsonld(content):
 ORG = {
     "@context": "https://schema.org",
     "@type": ["NGO", "LegalService"],
-    "name": "Poradna KL, z.ú.",
-    "alternateName": "Poradna KL",
+    "name": "Rada na dosah, z.ú.",
+    "alternateName": "Rada na dosah",
     "description": "Bezplatné právní poradenství pro lidi v sociální nouzi na Kladně: nájem, dluhy, sociální dávky.",
     "url": SITE + "/",
-    "email": "info@poradnakl.cz",
+    "email": "info@radanadosah.cz",
     "isAccessibleForFree": True,
     "areaServed": {"@type": "City", "name": "Kladno"},
     "address": {"@type": "PostalAddress", "streetAddress": "T. G. Masaryka 108", "postalCode": "272 01",
@@ -184,7 +184,7 @@ def build(mode):
             sys.exit(f"{src.name}: nenahrazené značky {leftover}")
         if mode == "preview" and slug == "uvod":
             # Artifact obalí hlavní stránku vlastní kostrou dokumentu: jen obsah hlavy a těla
-            page = page.replace("<title>Poradna KL – bezplatná poradna na Kladně</title>", "<title>Poradna KL</title>")
+            page = page.replace("<title>Rada na dosah – bezplatná poradna na Kladně</title>", "<title>Rada na dosah</title>")
             page = re.sub(r"<!doctype html>\s*<html[^>]*>\s*<head>", "", page)
             page = re.sub(r"</head>\s*<body([^>]*)>", lambda m: '<script>document.documentElement.lang="cs";document.body.className="page-home"</script>', page)
             page = page.replace("</body>", "").replace("</html>", "")

@@ -1,4 +1,4 @@
-/* Poradna KL – drobná vylepšení. Web funguje i bez JavaScriptu. */
+/* Rada na dosah – drobná vylepšení. Web funguje i bez JavaScriptu. */
 (function () {
   'use strict';
 
@@ -15,7 +15,7 @@
     var btn = $('.nav-toggle');
     var nav = $('#hlavni-menu');
     if (!btn || !nav) return;
-    var mq = window.matchMedia('(max-width: 1179px)');
+    var mq = window.matchMedia('(max-width: 1359px)');
     var label = btn.querySelector('span');
 
     function setOpen(open, returnFocus) {
@@ -147,7 +147,7 @@
     if (chyba) {
       status.className = 'form-status form-status--error';
       status.textContent = chyba === 'odeslani'
-        ? 'Zprávu se nepodařilo odeslat. Zkuste to prosím znovu, nebo napište na info@poradnakl.cz.'
+        ? 'Zprávu se nepodařilo odeslat. Zkuste to prosím znovu, nebo napište na info@radanadosah.cz.'
         : 'Formulář obsahuje chyby. Zkontrolujte prosím vyplněná pole.';
     }
 
@@ -288,7 +288,7 @@
 
     function showSuccess(demo) {
       store.del('sessionStorage', draftKey);
-      document.title = 'Děkujeme – Poradna KL';
+      document.title = 'Děkujeme – Rada na dosah';
       var html =
         '<div class="success" role="region" aria-labelledby="hotovo-title">' +
           '<div class="success__icon"><svg class="i" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"/></svg></div>' +
@@ -331,7 +331,7 @@
         sending = false;
         btn.removeAttribute('aria-disabled');
         status.className = 'form-status form-status--error';
-        status.textContent = 'Zprávu se nepodařilo odeslat. Zkuste to prosím znovu, nebo napište na info@poradnakl.cz.';
+        status.textContent = 'Zprávu se nepodařilo odeslat. Zkuste to prosím znovu, nebo napište na info@radanadosah.cz.';
       };
       if (!endpoint) { setTimeout(function () { done(true); }, 700); return; }
       fetch(endpoint, { method: 'POST', body: data, headers: { 'Accept': 'application/json' } })
@@ -341,7 +341,7 @@
   }
 
   /* ---------- Přepínač barevných kombinací ----------
-     Nástroj pro výběr palety s klientem. Na ostré doméně (poradnakl.cz) je skrytý,
+     Nástroj pro výběr palety s klientem. Na ostré doméně (radanadosah.cz) je skrytý,
      zobrazí se s ?barvy. Odkaz na konkrétní paletu: ?paleta=les */
   var PALETTES = [
     { id: 'rozhovor', name: 'Rozhovor', note: 'původní modrá a žlutá', c: ['#2340C8', '#FFCB2E', '#DCE4FF'] },
@@ -354,10 +354,12 @@
   ];
   function initPalette() {
     var params = new URLSearchParams(location.search);
-    var hiddenByUser = store.get('localStorage', 'pkl-barvy') === '0';
-    var prod = /(^|\.)poradnakl\.cz$/.test(location.hostname);
-    if (params.has('barvy')) { store.set('localStorage', 'pkl-barvy', '1'); hiddenByUser = false; }
-    if ((prod && store.get('localStorage', 'pkl-barvy') !== '1') || hiddenByUser) return;
+    // Dřívější verze skrývala přepínač natrvalo – takové skrytí rušíme, nově platí jen do zavření záložky.
+    if (store.get('localStorage', 'pkl-barvy') === '0') store.del('localStorage', 'pkl-barvy');
+    var prod = /(^|\.)radanadosah\.cz$/.test(location.hostname);
+    if (params.has('barvy')) { store.set('localStorage', 'pkl-barvy', '1'); store.del('sessionStorage', 'pkl-barvy-skryt'); }
+    if (prod && store.get('localStorage', 'pkl-barvy') !== '1') return;
+    if (store.get('sessionStorage', 'pkl-barvy-skryt') === '1') return;
 
     var root = document.documentElement;
     var current = function () { return root.getAttribute('data-palette') || 'rozhovor'; };
@@ -372,7 +374,7 @@
           return '<li><button type="button" class="palette__opt" data-id="' + p.id + '" aria-pressed="false">' + dots(p.c) +
             '<span>' + p.name + '<small>' + p.note + '</small></span><span class="palette__check" aria-hidden="true"></span></button></li>';
         }).join('') + '</ul>' +
-        '<div class="palette__actions"><button type="button" data-act="share">Zkopírovat odkaz na tuto paletu</button><button type="button" data-act="hide">Skrýt přepínač</button></div>' +
+        '<div class="palette__actions"><button type="button" data-act="share">Zkopírovat odkaz na tuto paletu</button><button type="button" data-act="hide">Skrýt do zavření záložky</button></div>' +
         '<p class="palette__status" role="status" aria-live="polite"></p>' +
       '</div>' +
       '<button type="button" class="palette__toggle" aria-expanded="false" aria-controls="palette-panel"></button>';
@@ -408,7 +410,7 @@
       }
       var act = e.target.closest('[data-act]');
       if (!act) return;
-      if (act.getAttribute('data-act') === 'hide') { store.set('localStorage', 'pkl-barvy', '0'); wrap.remove(); return; }
+      if (act.getAttribute('data-act') === 'hide') { store.set('sessionStorage', 'pkl-barvy-skryt', '1'); wrap.remove(); return; }
       var url = location.origin + location.pathname + '?paleta=' + current();
       var done = function () { status.textContent = 'Odkaz zkopírován: ' + url; };
       if (navigator.clipboard) navigator.clipboard.writeText(url).then(done, function () { status.textContent = url; });
