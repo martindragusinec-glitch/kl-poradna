@@ -340,7 +340,84 @@
     });
   }
 
+  /* ---------- Přepínač barevných kombinací ----------
+     Nástroj pro výběr palety s klientem. Na ostré doméně (poradnakl.cz) je skrytý,
+     zobrazí se s ?barvy. Odkaz na konkrétní paletu: ?paleta=les */
+  var PALETTES = [
+    { id: 'rozhovor', name: 'Rozhovor', note: 'modrá a žlutá', c: ['#2340C8', '#FFCB2E', '#DCE4FF'] },
+    { id: 'les', name: 'Les', note: 'zelená a meruňková', c: ['#1B5440', '#FFB25B', '#D6EBDD'] },
+    { id: 'petrolej', name: 'Petrolej', note: 'petrolejová a korálová', c: ['#0A5560', '#FFA889', '#D3ECEE'] },
+    { id: 'cihla', name: 'Cihla', note: 'cihlová a hořčicová', c: ['#872B1E', '#F7C548', '#F6DCD3'] },
+    { id: 'grafit', name: 'Grafit', note: 'grafitová a limetková', c: ['#1C1F2E', '#CDEB4B', '#E3E6F0'] },
+    { id: 'svestka', name: 'Švestka', note: 'švestková a růžová', c: ['#4A2D6B', '#FFB8C8', '#E6DDF2'] }
+  ];
+  function initPalette() {
+    var params = new URLSearchParams(location.search);
+    var hiddenByUser = store.get('localStorage', 'pkl-barvy') === '0';
+    var prod = /(^|\.)poradnakl\.cz$/.test(location.hostname);
+    if (params.has('barvy')) { store.set('localStorage', 'pkl-barvy', '1'); hiddenByUser = false; }
+    if ((prod && store.get('localStorage', 'pkl-barvy') !== '1') || hiddenByUser) return;
+
+    var root = document.documentElement;
+    var current = function () { return root.getAttribute('data-palette') || 'rozhovor'; };
+    var dots = function (c) { return '<span class="palette__dots" aria-hidden="true">' + c.map(function (x) { return '<span style="background:' + x + '"></span>'; }).join('') + '</span>'; };
+    var wrap = document.createElement('div');
+    wrap.className = 'palette no-print';
+    wrap.innerHTML =
+      '<div class="palette__panel" id="palette-panel" role="group" aria-labelledby="palette-title" hidden>' +
+        '<h2 id="palette-title">Barevná kombinace</h2>' +
+        '<p>Vyberte paletu. Platí pro celý web a zůstane nastavená i na dalších stránkách.</p>' +
+        '<ul class="palette__list">' + PALETTES.map(function (p) {
+          return '<li><button type="button" class="palette__opt" data-id="' + p.id + '" aria-pressed="false">' + dots(p.c) +
+            '<span>' + p.name + '<small>' + p.note + '</small></span><span class="palette__check" aria-hidden="true"></span></button></li>';
+        }).join('') + '</ul>' +
+        '<div class="palette__actions"><button type="button" data-act="share">Zkopírovat odkaz na tuto paletu</button><button type="button" data-act="hide">Skrýt přepínač</button></div>' +
+        '<p class="palette__status" role="status" aria-live="polite"></p>' +
+      '</div>' +
+      '<button type="button" class="palette__toggle" aria-expanded="false" aria-controls="palette-panel"></button>';
+    document.body.appendChild(wrap);
+    var panel = wrap.querySelector('.palette__panel');
+    var toggle = wrap.querySelector('.palette__toggle');
+    var status = wrap.querySelector('.palette__status');
+
+    function render() {
+      var id = current();
+      var p = PALETTES.filter(function (x) { return x.id === id; })[0] || PALETTES[0];
+      toggle.innerHTML = dots(p.c) + '<span>Barvy: ' + p.name + '</span>';
+      $$('.palette__opt', panel).forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-id') === id)); });
+    }
+    function setOpen(open, focusBack) {
+      panel.hidden = !open;
+      toggle.setAttribute('aria-expanded', String(open));
+      if (open) { var sel = panel.querySelector('[aria-pressed="true"]'); (sel || panel.querySelector('.palette__opt')).focus(); }
+      else if (focusBack) toggle.focus();
+    }
+    toggle.addEventListener('click', function () { setOpen(panel.hidden); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !panel.hidden) setOpen(false, true); });
+    document.addEventListener('click', function (e) { if (!panel.hidden && !wrap.contains(e.target)) setOpen(false); });
+    panel.addEventListener('click', function (e) {
+      var opt = e.target.closest('.palette__opt');
+      if (opt) {
+        var id = opt.getAttribute('data-id');
+        if (id === 'rozhovor') root.removeAttribute('data-palette'); else root.setAttribute('data-palette', id);
+        store.set('localStorage', 'pkl-paleta', id);
+        status.textContent = 'Nastavena paleta ' + PALETTES.filter(function (x) { return x.id === id; })[0].name + '.';
+        render();
+        return;
+      }
+      var act = e.target.closest('[data-act]');
+      if (!act) return;
+      if (act.getAttribute('data-act') === 'hide') { store.set('localStorage', 'pkl-barvy', '0'); wrap.remove(); return; }
+      var url = location.origin + location.pathname + '?paleta=' + current();
+      var done = function () { status.textContent = 'Odkaz zkopírován: ' + url; };
+      if (navigator.clipboard) navigator.clipboard.writeText(url).then(done, function () { status.textContent = url; });
+      else status.textContent = url;
+    });
+    render();
+  }
+
   function init() {
+    initPalette();
     initNav();
     initCopy();
     initFaq();

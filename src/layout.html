@@ -22,7 +22,7 @@
 <link rel="preload" href="{{asset:assets/fonts/satoshi-900.woff2}}" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="{{asset:assets/fonts/satoshi-500.woff2}}" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{{asset:assets/css/site.css}}">
-<script>document.documentElement.className+=' js'</script>
+<script>(function(d){d.className+=' js';try{var q=new URLSearchParams(location.search).get('paleta'),p=q||localStorage.getItem('pkl-paleta');if(q)localStorage.setItem('pkl-paleta',q);if(p&&p!=='rozhovor')d.setAttribute('data-palette',p)}catch(e){}})(document.documentElement)</script>
 <script src="{{asset:assets/js/site.js}}" defer></script>
 {{jsonld}}
 </head>

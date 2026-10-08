@@ -49,6 +49,18 @@ Dokud nejsou proměnné nastavené, formulář po odeslání slušně oznámí c
   - Obě písma jsou na webu uložená lokálně, nic se nenačítá z Google.
 - **Fotky:** černobílé s násobením na žluté ploše (duotón), vložené do tvaru bubliny.
 
+## Přepínač barevných kombinací
+
+Vpravo dole je tlačítko „Barvy“ se šesti paletami: Rozhovor, Les, Petrolej, Cihla, Grafit a Švestka.
+
+- Změní barvy celého webu včetně fotek, loga a dekorací.
+- Volba se pamatuje i na dalších stránkách.
+- Odkaz na konkrétní paletu: `?paleta=les` (tlačítko „Zkopírovat odkaz na tuto paletu“).
+- Na ostré doméně `poradnakl.cz` je přepínač skrytý. Zobrazí se s `?barvy`.
+- Všechny palety drží kontrast AAA (ověřeno axe na 7 stránkách, desktop i mobil).
+- **Jak paletu zvolit natrvalo:** hodnoty vybrané palety z bloku `html[data-palette="…"]` v `assets/css/site.css` se přepíšou do `:root` a přepínač (`initPalette` v `site.js`) se smaže.
+- Náhled všech palet: `docs/palety-nahled.png`. Ve Figmě jsou stejné palety jako režimy proměnných „Poradna KL“.
+
 ## Přístupnost (cíl WCAG 2.2 AA, kontrast AAA)
 
 - Odkaz „Přeskočit na obsah“, správná struktura stránky (landmarky) a pořadí nadpisů, `aria-current` v menu.
