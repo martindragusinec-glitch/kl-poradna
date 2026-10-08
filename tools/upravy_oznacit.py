@@ -7,6 +7,7 @@
 Upravitelný je prvek, který obsahuje jen text a řádkové formátování (strong, em, br, odkaz, span.todo)
 a žádné zástupné značky {{…}} kromě {{link:…}} v odkazu. Holý text vedle ikony (tlačítka, nadpisy s ikonou)
 se zabalí do <span data-k>. Už označené prvky zůstávají beze změny, nové dostanou další volné číslo.
+Rozbalovací otázky (<details>) dostanou data-polozka: editor je umí přidat a smazat.
 Po ruční úpravě stránek stačí skript spustit znovu.
 """
 import re
@@ -17,6 +18,7 @@ ROOT = Path(__file__).resolve().parent.parent
 VOID = {"br", "img", "input", "meta", "link", "hr", "source", "wbr", "area", "col", "embed", "param", "track"}
 INLINE = {"strong", "em", "b", "i", "br", "a", "span", "small", "abbr"}
 SKIP_TAGS = {"script", "style", "svg", "head", "title", "button", "select", "option", "textarea", "noscript", "template", "nav"}
+ITEM_TAGS = {"details"}  # opakovatelné položky: editor je umí přidat a smazat (časté dotazy)
 SKIP_CLASSES = {"brand", "skip-link", "vh", "hp", "msg__num"}
 TOKEN = re.compile(
     r"<!--.*?-->|<![^>]*>"
@@ -110,16 +112,18 @@ def pure(el):
     return True
 
 
-def walk(src, el, marks, wraps):
+def walk(src, el, marks, wraps, items=None):
     if el.kind != "el" or (el.tag != "#root" and skipped(el)):
         return
+    if items is not None and el.tag in ITEM_TAGS and "data-polozka" not in el.attr():
+        items.append(el)
     if "data-k" in el.attr():
         return
     bare = [c for c in el.children if c.kind == "text" and has_words(text_of(src, c))]
     elems = [c for c in el.children if c.kind == "el"]
     if el.tag != "#root" and el.tag not in VOID and not js_hook(el) and pure(el) and has_words(re.sub(r"<[^>]+>", "", text_of(src, el))):
         if not bare and len(elems) == 1 and elems[0].tag != "br":
-            return walk(src, elems[0], marks, wraps)  # jediný potomek (odkaz v položce seznamu): označit ten
+            return walk(src, elems[0], marks, wraps, items)  # jediný potomek (odkaz v položce seznamu): označit ten
         marks.append(el)
         return
     run = []
@@ -129,7 +133,7 @@ def walk(src, el, marks, wraps):
             wraps.append(run[:])
         else:
             for c in run:
-                walk(src, c, marks, wraps)
+                walk(src, c, marks, wraps, items)
 
     for ch in el.children:
         if ch.kind == "text" or (ch.kind == "el" and inline_ok(ch) and not skipped(ch) and not js_hook(ch)):
@@ -137,22 +141,27 @@ def walk(src, el, marks, wraps):
         else:
             flush()
             run = []
-            walk(src, ch, marks, wraps)
+            walk(src, ch, marks, wraps, items)
     flush()
 
 
 def process(path, name, check):
     src = path.read_text()
     root = parse(src)
-    marks, wraps = [], []
-    walk(src, root, marks, wraps)
+    marks, wraps, items = [], [], []
+    walk(src, root, marks, wraps, items)
     if check:
-        return len(marks) + len(wraps)
+        return len(marks) + len(wraps) + len(items)
     used = [int(n) for n in re.findall(r'data-k="' + re.escape(name) + r':(\d+)"', src)]
     nxt = max(used, default=0) + 1
+    used_p = [int(n) for n in re.findall(r'data-polozka="' + re.escape(name) + r':p(\d+)"', src)]
+    nxt_p = max(used_p, default=0) + 1
     edits = []  # (pozice, vložený text)
-    items = sorted([("m", e.start, e) for e in marks] + [("w", r[0].start, r) for r in wraps], key=lambda x: x[1])
-    for kind, _, obj in items:
+    for el in items:
+        edits.append((el.open_end - 1, f' data-polozka="{name}:p{nxt_p}"'))
+        nxt_p += 1
+    texts = sorted([("m", e.start, e) for e in marks] + [("w", r[0].start, r) for r in wraps], key=lambda x: x[1])
+    for kind, _, obj in texts:
         key = f'{name}:{nxt}'
         nxt += 1
         if kind == "m":
@@ -168,7 +177,7 @@ def process(path, name, check):
     for pos, ins in sorted(edits, key=lambda x: x[0], reverse=True):
         src = src[:pos] + ins + src[pos:]
     path.write_text(src)
-    return len(items)
+    return len(items) + len(texts)
 
 
 def main():

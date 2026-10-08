@@ -7,7 +7,7 @@ Statický web (9 stránek + děkovací stránka + 404) pro Poradnu KL, z.ú. Či
 ```bash
 npm run build      # python3 tools/build.py -> dist/ (čisté adresy /kontakt/)
 npm run preview    # python3 tools/build.py preview -> preview/ (ploché soubory, formulář v ukázkovém režimu)
-npm run serve      # lokální náhled dist/ na http://localhost:8797 (POST /api/kontakt jen potvrdí, /upravit/ = editor)
+npm run serve      # lokální náhled dist/ na http://localhost:8797 (POST /api/kontakt jen potvrdí, /admin/ = správa webu)
 npm run images     # jen na macOS: přegeneruje zmenšené fotky do assets/img/web/ (commitují se)
 node tools/og.mjs  # vykreslí OG obrázek assets/img/og.jpg z tools/og/og.html
 node tools/qa.mjs  # axe-core (WCAG 2.2 AA + kontrast AAA) + screenshoty do docs/qa
@@ -18,7 +18,7 @@ node tools/qa.mjs  # axe-core (WCAG 2.2 AA + kontrast AAA) + screenshoty do docs
 - `assets/css/site.css`: celý vizuální systém. Tokeny jsou nahoře.
 - `assets/js/site.js`: menu, formulář, FAQ, kopírování, odškrtávací seznam.
 - `api/kontakt.js`: Vercel funkce, která formulář pošle e-mailem.
-- `api/upravit.js`: Vercel funkce pro úpravy textů na webu (viz níže).
+- `api/upravit.js` + `src/admin.html` + `assets/js/admin.js`: správa webu pro klienta (viz níže).
 - `assets/img/src/`: zdrojové fotky a jejich licence (`CREDITS.md`).
 - `assets/img/web/`: zmenšené fotky pro web.
 - `assets/brand/`: znak loga.
@@ -54,28 +54,33 @@ Dokud nejsou proměnné nastavené, formulář po odeslání slušně oznámí c
 
 Klient vybral paletu Malina, je natrvalo v `:root` v `assets/css/site.css`. Přepínač palet (17 palet + vlastní barvy) je z webu odstraněný. Najdeš ho v gitu v commitu `7a088dd`, kdyby bylo potřeba vybírat znovu.
 
-## Úpravy textů na webu (pro klienta)
+## Správa webu pro klienta (/admin/)
 
-Klient si texty upravuje přímo na stránce, bez gitu a bez AI:
+Klient upravuje web bez gitu a bez AI na **https://kl-poradna.vercel.app/admin/** (později `radanadosah.cz/admin/`, stará adresa `/upravit/` přesměruje):
 
-1. Otevře **https://kl-poradna.vercel.app/upravit/** (později `radanadosah.cz/upravit/`) a zadá heslo. Přihlášení vydrží 30 dní.
-2. Upravitelné texty mají přerušovaný rámeček. Klikne na text a přepíše ho. Tučně ⌘B / Ctrl+B, nový řádek Shift+Enter.
-3. Klikne na **Zveřejnit změny**. Do minuty jsou změny na webu a lišta napíše „Hotovo“.
-4. „Zahodit“ vrátí neuložené změny. „Ukončit úpravy“ vrátí běžné zobrazení.
+- **Přihlášení heslem**, vydrží 30 dní.
+- **Vlevo seznam stránek, uprostřed živý náhled webu** (přepínač Počítač / Mobil). Na text v náhledu se klikne a přepíše se. Nad textem je lišta: Tučně, Kurzíva, Odkaz, Původní.
+- **Časté dotazy:** po najetí na otázku tlačítka „Přidat otázku pod“ a „Smazat“.
+- **Název a popis pro Google** pro každou stránku, s náhledem výsledku ve vyhledávání.
+- **Koncept:** změny se drží v prohlížeči (localStorage), návštěvníci je nevidí. Ve „Zveřejnit změny“ je přehled co → na co, jednotlivé změny jde zahodit, pak jedno tlačítko zveřejní vše.
+- **Zveřejnění:** `api/upravit.js` udělá jeden commit do GitHubu, Vercel web nasadí, správa počká na dokončení a náhled obnoví.
+- **Historie:** posledních 20 změn. Změnu ze správy webu jde vrátit jedním kliknutím; vrácení je zase běžný commit.
 
-Jak to funguje: `assets/js/upravy.js` se stáhne jen v režimu úprav, běžný návštěvník ho nenačítá. `api/upravit.js` uloží změnu jako commit do GitHubu (`src/…`) a Vercel web sám nasadí. Historie všech úprav je v gitu, takže jde cokoli vrátit. Server text vyčistí (jen tučné, kurzíva, zalomení a odkazy), doplní nezlomitelné mezery za předložky a zkontroluje, že text mezitím nezměnil někdo jiný. Doplněný text v `[doplnit]` ztratí šrafování.
+Server text vyčistí (jen tučné, kurzíva, zalomení a odkazy), doplní nezlomitelné mezery za předložky a zkontroluje, že text mezitím nezměnil někdo jiný. Doplněný text v `[doplnit]` ztratí šrafování. Do commitu se ukládá i strojový záznam změny (`Upravy-Data:`), podle kterého jde změnu vrátit.
 
 **Zapnutí na Vercelu (jednou):**
 
 1. GitHub → Settings → Developer settings → **Fine-grained personal access tokens** → Generate new token. Repository access: *Only select repositories* → `kl-poradna`. Permissions: **Contents: Read and write**, **Commit statuses: Read-only**. Platnost třeba 1 rok (pak vyměnit).
-2. Vercel → projekt `kl-poradna` → Settings → Environment Variables (Production):
-   - `UPRAVY_HESLO`: heslo pro klienta (dlouhé, třeba čtyři náhodná slova),
-   - `UPRAVY_GITHUB_TOKEN`: token z kroku 1.
-3. Redeploy (Deployments → poslední → Redeploy), aby se proměnné načetly.
+2. Vercel → projekt `kl-poradna` → Settings → Environment Variables (Production): `UPRAVY_HESLO` (heslo pro klienta) a `UPRAVY_GITHUB_TOKEN` (token z kroku 1).
+3. Redeploy, aby se proměnné načetly.
 
 Volitelně `UPRAVY_REPO` (výchozí podle Vercelu) a `UPRAVY_VETEV` (výchozí `main`). Změna hesla zneplatní všechna přihlášení.
 
-**Pro vývojáře:** upravitelné texty mají ve zdrojích atribut `data-k="stránka:číslo"`. Po přidání nového obsahu spusť `python3 tools/upravy_oznacit.py` (doplní chybějící označení, `--check` jen vypíše počet). Lokálně `npm run serve` → http://localhost:8797/upravit/, heslo `upravy` (nebo `UPRAVY_HESLO`). Lokální úpravy se zapisují rovnou do `src/` a přestaví `dist/`.
+**Pro vývojáře:**
+- Upravitelné texty mají ve zdrojích `data-k="stránka:číslo"`, opakovatelné položky (`<details>`) `data-polozka="stránka:pN"`. Po přidání nového obsahu spusť `python3 tools/upravy_oznacit.py` (`--check` jen vypíše počet neoznačených).
+- **Klient commituje do `main`: před vlastní prací vždy `git pull`.**
+- Lokálně `npm run serve` → http://localhost:8797/admin/, heslo `upravy` (nebo `UPRAVY_HESLO`). Lokálně se zapisuje rovnou do `src/`, `dist/` se přestaví a historie je jen v paměti serveru.
+- Správa webu vyžaduje `X-Frame-Options: SAMEORIGIN` (náhled je iframe), viz `vercel.json`.
 
 ## Přístupnost (cíl WCAG 2.2 AA, kontrast AAA)
 
@@ -94,7 +99,7 @@ Volitelně `UPRAVY_REPO` (výchozí podle Vercelu) a `UPRAVY_VETEV` (výchozí `
 
 ## Před spuštěním (DOPLNIT)
 
-- [ ] **Úpravy textů:** na Vercelu nastavit `UPRAVY_HESLO` a `UPRAVY_GITHUB_TOKEN` (viz Úpravy textů na webu), heslo předat klientovi.
+- [ ] **Úpravy textů:** na Vercelu nastavit `UPRAVY_HESLO` a `UPRAVY_GITHUB_TOKEN` (viz Správa webu), heslo a odkaz /admin/ předat klientovi.
 - [ ] **Příjem formuláře:** na Vercelu nastavit `RESEND_API_KEY`, `KONTAKT_FROM` a případně `KONTAKT_TO` (viz Nasazení na Vercel). Poslat zkušební žádost.
 - [ ] Doménu (`SITE` v build.py) ověřit u registrátora. radanadosah.cz zatím nemá DNS záznam.
 - [ ] Doplnit IČO, zápis v rejstříku ústavů, datovou schránku a číslo účtu.

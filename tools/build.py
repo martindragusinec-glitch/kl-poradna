@@ -122,6 +122,24 @@ ORG = {
 }
 
 
+ADMIN_EXTRA = [
+    ("ochrana-osobnich-udaju", "Ochrana osobních údajů"),
+    ("pristupnost", "Prohlášení o přístupnosti"),
+    ("dekujeme", "Děkujeme (po odeslání formuláře)"),
+]
+
+
+def build_admin(out):
+    """Správa webu /admin/ (assets/js/admin.js): seznam stránek se vloží do HTML."""
+    stranky = [{"slug": s, "nazev": n, "url": page_url(s, "prod")} for s, n in NAV + ADMIN_EXTRA]
+    asset = lambda p: "/" + p + (f"?v={fingerprint(p)}" if p.endswith((".css", ".js")) else "")
+    page = (ROOT / "src/admin.html").read_text()
+    page = page.replace("{{stranky}}", json.dumps(stranky, ensure_ascii=False)).replace("{{logo}}", LOGO)
+    page = re.sub(r"\{\{asset:([^}]+)\}\}", lambda m: asset(m.group(1)), page)
+    (out / "admin").mkdir(exist_ok=True)
+    (out / "admin/index.html").write_text(page)
+
+
 def build(mode):
     out = ROOT / ("preview" if mode == "preview" else "dist")
     if out.exists():
@@ -193,6 +211,7 @@ def build(mode):
             sitemap.append(SITE + page_url(slug, "prod"))
 
     if mode != "preview":
+        build_admin(out)
         (out / "sitemap.xml").write_text(
             '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
             + "".join(f"  <url><loc>{u}</loc></url>\n" for u in sitemap) + "</urlset>\n")

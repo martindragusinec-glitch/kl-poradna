@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Správa webu – Rada na dosah</title>
+<link rel="icon" href="{{asset:assets/img/favicon.svg}}" type="image/svg+xml">
+<link rel="preload" href="{{asset:assets/fonts/satoshi-500.woff2}}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{{asset:assets/fonts/satoshi-700.woff2}}" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="{{asset:assets/css/admin.css}}">
+<script type="application/json" id="stranky">{{stranky}}</script>
+<script src="{{asset:assets/js/admin.js}}" defer></script>
+</head>
+<body>
+<p class="a-boot" id="a-boot">Načítám správu webu…</p>
+
+<main class="a-gate" id="a-login" hidden>
+  <form class="a-gate__card" novalidate>
+    <p class="a-gate__brand">{{logo}}<span><strong>Rada na dosah</strong>Správa webu</span></p>
+    <h1>Přihlášení</h1>
+    <p class="a-gate__lead">Zadejte heslo, které jste dostali od správce webu. Přihlášení vydrží 30 dní.</p>
+    <label class="a-label" for="a-heslo">Heslo</label>
+    <div class="a-pass">
+      <input class="a-input" id="a-heslo" type="password" autocomplete="current-password" autocapitalize="off" spellcheck="false" required aria-describedby="a-login-error">
+      <button class="a-pass__show" type="button" aria-pressed="false" aria-controls="a-heslo">Zobrazit</button>
+    </div>
+    <p class="a-error" id="a-login-error" role="alert"></p>
+    <button class="a-btn a-btn--primary a-btn--block" type="submit">Přihlásit se</button>
+  </form>
+  <a class="a-gate__back" href="/">Zpět na web</a>
+</main>
+
+<main class="a-gate" id="a-off" hidden>
+  <div class="a-gate__card">
+    <p class="a-gate__brand">{{logo}}<span><strong>Rada na dosah</strong>Správa webu</span></p>
+    <h1>Správa webu zatím není zapnutá</h1>
+    <p class="a-gate__lead">Na serveru chybí nastavení (heslo a přístup ke GitHubu). Dejte prosím vědět správci webu.</p>
+    <a class="a-btn a-btn--ghost a-btn--block" href="/">Zpět na web</a>
+  </div>
+</main>
+
+<div class="a-app" id="a-app" hidden>
+  <header class="a-top">
+    <a class="a-brand" href="/admin/">{{logo}}<span><strong>Rada na dosah</strong>Správa webu</span></a>
+    <label class="a-pick"><span class="vh">Stránka</span><select class="a-pick__select" id="a-pick"></select></label>
+    <div class="a-seg" role="group" aria-label="Velikost náhledu">
+      <button type="button" data-device="pc" aria-pressed="true"><i data-ico="pc"></i>Počítač</button>
+      <button type="button" data-device="mobil" aria-pressed="false"><i data-ico="mobil"></i>Mobil</button>
+    </div>
+    <div class="a-top__end">
+      <button type="button" class="a-btn a-btn--quiet a-hide-s" data-panel="historie"><i data-ico="historie"></i>Historie</button>
+      <button type="button" class="a-btn a-btn--primary" data-panel="zmeny"><span class="a-hide-s">Zveřejnit změny</span><span class="a-show-s">Zveřejnit</span><span class="a-badge" data-pocet>0</span></button>
+      <button type="button" class="a-icon-btn" data-panel="menu" aria-label="Další možnosti"><i data-ico="menu"></i></button>
+    </div>
+  </header>
+
+  <nav class="a-side" aria-label="Stránky webu">
+    <p class="a-side__label">Stránky</p>
+    <ul class="a-pages" id="a-pages"></ul>
+    <p class="a-side__label">Tato stránka</p>
+    <button type="button" class="a-side__btn" data-panel="google"><i data-ico="google"></i>Název a popis pro Google</button>
+    <p class="a-side__label">Pomoc</p>
+    <button type="button" class="a-side__btn" data-panel="napoveda"><i data-ico="napoveda"></i>Jak upravovat</button>
+    <button type="button" class="a-side__btn" data-panel="historie"><i data-ico="historie"></i>Historie a vrácení změn</button>
+  </nav>
+
+  <main class="a-stage">
+    <div class="a-browser" id="a-browser" data-device="pc">
+      <div class="a-browser__bar">
+        <span class="a-browser__dots" aria-hidden="true"><span></span><span></span><span></span></span>
+        <span class="a-browser__url"><i data-ico="zamek"></i><span id="a-url">radanadosah.cz</span></span>
+        <a class="a-browser__open" id="a-open" href="/" target="_blank" rel="noopener">Otevřít web<i data-ico="ven"></i></a>
+      </div>
+      <div class="a-browser__view">
+        <iframe class="a-frame" id="a-frame" title="Náhled webu, texty v něm jde přímo upravovat"></iframe>
+        <div class="a-busy" id="a-busy" hidden>
+          <div class="a-busy__card" role="status" aria-live="polite">
+            <span class="a-spinner" aria-hidden="true"></span>
+            <p class="a-busy__title" id="a-busy-title">Zveřejňuji změny…</p>
+            <p class="a-busy__text" id="a-busy-text">Web se právě znovu sestavuje. Obvykle to trvá do minuty, pak se náhled sám obnoví.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="a-toasts" id="a-toasts" role="status" aria-live="polite"></div>
+  </main>
+
+  <dialog class="a-drawer" id="a-drawer" aria-labelledby="a-drawer-title">
+    <header class="a-drawer__head">
+      <h2 id="a-drawer-title"></h2>
+      <button type="button" class="a-icon-btn" data-close aria-label="Zavřít"><i data-ico="zavrit"></i></button>
+    </header>
+    <div class="a-drawer__body" id="a-drawer-body"></div>
+    <footer class="a-drawer__foot" id="a-drawer-foot"></footer>
+  </dialog>
+
+  <dialog class="a-modal" id="a-guide" aria-labelledby="a-guide-title">
+    <p class="a-modal__kicker">Vítejte ve správě webu</p>
+    <h2 id="a-guide-title">Upravujete přímo na stránce</h2>
+    <ol class="a-steps">
+      <li><span>1</span><div><strong>Klikněte na text a přepište ho.</strong>Jako v textovém editoru. Nad textem se objeví lišta pro tučné písmo a odkazy.</div></li>
+      <li><span>2</span><div><strong>Změny se ukládají jako koncept.</strong>Návštěvníci je zatím nevidí. Můžete mezi stránkami přecházet, nic se neztratí.</div></li>
+      <li><span>3</span><div><strong>Klikněte na „Zveřejnit změny“.</strong>Zkontrolujete si, co se mění, a do minuty je to na webu. Každou změnu jde později vrátit.</div></li>
+    </ol>
+    <button type="button" class="a-btn a-btn--primary a-btn--block" data-close>Pustit se do toho</button>
+  </dialog>
+</div>
+</body>
+</html>
