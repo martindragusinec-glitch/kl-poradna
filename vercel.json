@@ -52,6 +52,31 @@
           "value": "public, max-age=604800"
         }
       ]
+    },
+    {
+      "source": "/api/upravit/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/upravit",
+      "destination": "/?upravit",
+      "permanent": false
+    },
+    {
+      "source": "/upravit/",
+      "destination": "/?upravit",
+      "permanent": false
     }
   ]
 }

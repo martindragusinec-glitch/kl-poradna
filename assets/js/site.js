@@ -340,12 +340,32 @@
     });
   }
 
+  /* ---------- Úpravy textů (editor se stahuje jen v režimu úprav: /upravit/ → ?upravit) ---------- */
+  function initUpravy() {
+    var q = /[?&]upravit(=|&|$)/.test(location.search);
+    if (q) {
+      store.set('localStorage', 'rnd-upravy', '1');
+      history.replaceState(null, '', location.pathname + location.hash);
+    }
+    if (!q && store.get('localStorage', 'rnd-upravy') !== '1') return;
+    var me = $('script[data-upravy]');
+    if (!me) return;
+    var css = document.createElement('link');
+    css.rel = 'stylesheet';
+    css.href = me.getAttribute('data-upravy-css');
+    document.head.appendChild(css);
+    var js = document.createElement('script');
+    js.src = me.getAttribute('data-upravy');
+    document.body.appendChild(js);
+  }
+
   function init() {
     initNav();
     initCopy();
     initFaq();
     initChecklist();
     initForm();
+    initUpravy();
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();

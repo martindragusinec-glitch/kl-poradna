@@ -23,7 +23,7 @@
 <link rel="preload" href="{{asset:assets/fonts/satoshi-500.woff2}}" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{{asset:assets/css/site.css}}">
 <script>document.documentElement.className+=' js'</script>
-<script src="{{asset:assets/js/site.js}}" defer></script>
+<script src="{{asset:assets/js/site.js}}" defer data-upravy="{{asset:assets/js/upravy.js}}" data-upravy-css="{{asset:assets/css/upravy.css}}"></script>
 {{jsonld}}
 </head>
 <body class="{{bodyclass}}">
@@ -58,11 +58,11 @@
             {{logo}}
             <span><span class="brand__name">Rada <span>na dosah</span></span><span class="brand__sub">bezplatná poradna na Kladně</span></span>
           </a>
-          <p class="footer-claim">Bezplatné právní poradenství pro lidi v&nbsp;sociální nouzi. Nájem, dluhy, sociální dávky.</p>
+          <p class="footer-claim" data-k="layout:1">Bezplatné právní poradenství pro lidi v&nbsp;sociální nouzi. Nájem, dluhy, sociální dávky.</p>
         </div>
         <div>
-          <h2>Rada na dosah, z.ú.</h2>
-          <address>
+          <h2 data-k="layout:2">Rada na dosah, z.ú.</h2>
+          <address data-k="layout:3">
             T. G. Masaryka 108, 272 01 Kladno<br>
             <a href="mailto:info@radanadosah.cz">info@radanadosah.cz</a><br>
             IČO <span class="todo">[doplnit]</span><br>
@@ -71,21 +71,21 @@
           </address>
         </div>
         <div>
-          <h2>Odkazy</h2>
+          <h2 data-k="layout:4">Odkazy</h2>
           <ul>
-            <li><a href="{{link:ochrana-osobnich-udaju}}">Ochrana osobních údajů</a></li>
-            <li><a href="{{link:ochrana-osobnich-udaju}}#cookies">Cookies</a></li>
-            <li><a href="{{link:o-nas}}#podporte-nas">Podpořte nás</a></li>
-            <li><a href="{{link:pristupnost}}">Prohlášení o přístupnosti</a></li>
+            <li><a href="{{link:ochrana-osobnich-udaju}}" data-k="layout:5">Ochrana osobních údajů</a></li>
+            <li><a href="{{link:ochrana-osobnich-udaju}}#cookies" data-k="layout:6">Cookies</a></li>
+            <li><a href="{{link:o-nas}}#podporte-nas" data-k="layout:7">Podpořte nás</a></li>
+            <li><a href="{{link:pristupnost}}" data-k="layout:8">Prohlášení o přístupnosti</a></li>
           </ul>
         </div>
         <div>
-          <h2>Jste v ohrožení?</h2>
-          <p class="footer-crisis">{{icon:lifebuoy}}<span>Nejsme krizová služba. V&nbsp;akutním ohrožení volejte <a href="tel:158">158</a> nebo <a href="tel:112">112</a>.</span></p>
+          <h2 data-k="layout:9">Jste v ohrožení?</h2>
+          <p class="footer-crisis">{{icon:lifebuoy}}<span data-k="layout:10">Nejsme krizová služba. V&nbsp;akutním ohrožení volejte <a href="tel:158">158</a> nebo <a href="tel:112">112</a>.</span></p>
         </div>
       </div>
       <div class="site-footer__bottom">
-        <p>Informace na tomto webu jsou obecné a&nbsp;nenahrazují poradu k&nbsp;vaší konkrétní situaci. Nejsme advokátní kancelář.</p>
+        <p data-k="layout:11">Informace na tomto webu jsou obecné a&nbsp;nenahrazují poradu k&nbsp;vaší konkrétní situaci. Nejsme advokátní kancelář.</p>
       </div>
     </div>
   </div>

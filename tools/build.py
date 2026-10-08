@@ -100,7 +100,7 @@ def picture(arg, asset, dims):
 
 def faq_jsonld(content):
     items = []
-    for m in re.finditer(r"<summary><span>(.*?)</span>.*?</summary>\s*<div class=\"faq__answer\">(.*?)</div>", content, re.S):
+    for m in re.finditer(r"<summary><span[^>]*>(.*?)</span>.*?</summary>\s*<div class=\"faq__answer\">(.*?)</div>", content, re.S):
         q = re.sub(r"<[^>]+>", "", m.group(1))
         a = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", "", m.group(2))).strip()
         items.append({"@type": "Question", "name": html.unescape(q), "acceptedAnswer": {"@type": "Answer", "text": html.unescape(a)}})
