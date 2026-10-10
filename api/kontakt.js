@@ -10,6 +10,8 @@
 import { poptavka, potvrzeni } from './_emaily.js';
 
 const TEMATA = ['Nájem a bydlení', 'Dluhy a exekuce', 'Sociální dávky', 'Jiné'];
+// Hodnoty vložené do Vercelu často nesou mezeru, konec řádku nebo uvozovky navíc
+const env = (k) => String(process.env[k] ?? '').trim().replace(/^(["'])(.*)\1$/s, '$2').trim();
 const MAX_POPIS = 1000;
 
 export default async function handler(req, res) {
@@ -45,12 +47,17 @@ export default async function handler(req, res) {
   if (data.souhlas !== 'ano') errors.push('souhlas');
   if (errors.length) return reply(400, { ok: false, error: 'invalid', fields: errors }, '/kontakt/?chyba=1#formular');
 
-  const key = process.env.RESEND_API_KEY;
-  const from = process.env.KONTAKT_FROM;
-  const to = process.env.KONTAKT_TO || 'info@radanadosah.cz';
-  if (!key || !from) return reply(503, { ok: false, error: 'not-configured' }, '/kontakt/?chyba=odeslani#formular');
+  const key = env('RESEND_API_KEY');
+  const from = env('KONTAKT_FROM');
+  const to = env('KONTAKT_TO') || 'info@radanadosah.cz';
+  if (!key || !from) {
+    // jen názvy chybějících proměnných, nikdy hodnoty
+    const chybi = [!key && 'RESEND_API_KEY', !from && 'KONTAKT_FROM'].filter(Boolean);
+    console.error('kontakt: chybí', chybi.join(', '));
+    return reply(503, { ok: false, error: 'not-configured', chybi }, '/kontakt/?chyba=odeslani#formular');
+  }
 
-  const zaklad = (process.env.SITE_URL || 'https://www.radanadosah.cz').replace(/\/$/, '');
+  const zaklad = (env('SITE_URL') || 'https://www.radanadosah.cz').replace(/\/$/, '');
   const prijato = new Date();
   const posli = (zprava) => fetch('https://api.resend.com/emails', {
     method: 'POST',
