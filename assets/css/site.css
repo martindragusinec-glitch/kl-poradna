@@ -535,6 +535,8 @@ fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
 .success h1, .success h2 { font-size: clamp(2.25rem, 1.6rem + 2.4vw, 3.5rem); max-width: 16ch; }
 .success h2:focus, .success h1:focus { outline: none; }
 .success p { margin-top: 14px; font-size: var(--fs-lead); line-height: 1.5; max-width: 44ch; }
+.success .success__mail { font-size: var(--fs-body); }
+.success__mail strong { overflow-wrap: anywhere; }
 .success .btn-row { margin-top: 30px; }
 .demo-note { margin-top: 22px; font-size: var(--fs-small) !important; }
 

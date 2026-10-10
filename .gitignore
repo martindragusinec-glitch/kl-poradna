@@ -4,3 +4,4 @@ docs/qa/
 node_modules/
 .DS_Store
 .vercel/
+tools/email/nahled-*.html

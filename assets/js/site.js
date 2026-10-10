@@ -286,7 +286,7 @@
     form.addEventListener('change', revalidate);
     form.addEventListener('focusout', revalidate);
 
-    function showSuccess(demo) {
+    function showSuccess(demo, email) {
       store.del('sessionStorage', draftKey);
       document.title = 'Děkujeme – Rada na dosah';
       var html =
@@ -294,10 +294,13 @@
           '<div class="success__icon"><svg class="i" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"/></svg></div>' +
           '<h2 id="hotovo-title" tabindex="-1">Děkujeme, vaše zpráva k nám dorazila.</h2>' +
           '<p>Ozveme se vám do 5 pracovních dnů.</p>' +
+          (email ? '<p class="success__mail">Potvrzení jsme vám poslali na <strong></strong>. Když ho nevidíte, podívejte se i do složky hromadné nebo nevyžádané pošty.</p>' : '') +
           '<div class="btn-row"><a class="btn btn--primary" href="' + (card.getAttribute('data-next') || '#') + '">Co si vzít s sebou na schůzku</a></div>' +
           (demo ? '<p class="demo-note">Ukázka: formulář zatím nikam neodesílá. Před spuštěním webu je potřeba nastavit příjem zpráv.</p>' : '') +
         '</div>';
       card.innerHTML = html;
+      var m = $('.success__mail strong', card);
+      if (m) m.textContent = email; // adresu od uživatele vkládat jen jako text
       var h = $('#hotovo-title', card);
       card.scrollIntoView({ block: 'start' });
       if (h) h.focus({ preventScroll: true });
@@ -326,7 +329,7 @@
       var data = new URLSearchParams(new FormData(form));
       data.append('cas_vyplneni_s', String(Math.round((Date.now() - startedAt) / 1000)));
 
-      var done = function (demo) { sending = false; showSuccess(demo); };
+      var done = function (demo, email) { sending = false; showSuccess(demo, email); };
       var fail = function () {
         sending = false;
         btn.removeAttribute('aria-disabled');
@@ -335,7 +338,12 @@
       };
       if (!endpoint) { setTimeout(function () { done(true); }, 700); return; }
       fetch(endpoint, { method: 'POST', body: data, headers: { 'Accept': 'application/json' } })
-        .then(function (res) { if (res.ok) done(false); else fail(); })
+        .then(function (res) {
+          if (!res.ok) return fail();
+          return res.json().catch(function () { return {}; }).then(function (j) {
+            done(false, j.potvrzeni ? (data.get('email') || '').trim() : '');
+          });
+        })
         .catch(fail);
     });
   }

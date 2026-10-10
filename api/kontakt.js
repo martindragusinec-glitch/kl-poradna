@@ -1,9 +1,13 @@
 // Vercel Serverless Function: příjem formuláře „Požádat o schůzku“ a odeslání e-mailem přes Resend.
+// Pošle poptávku poradně (šablona api/_emaily.js) a klientovi, který vyplnil e-mail, potvrzení o přijetí.
 // Proměnné prostředí (Vercel → Settings → Environment Variables):
 //   RESEND_API_KEY  klíč z https://resend.com (doména odesílatele musí být ověřená)
 //   KONTAKT_FROM    odesílatel, např. "Web Rada na dosah <web@radanadosah.cz>"
 //   KONTAKT_TO      příjemce, výchozí info@radanadosah.cz
+//   SITE_URL        adresa webu pro odkazy a logo v e-mailech, výchozí https://www.radanadosah.cz
 // Bez nastavení vrací 503 a formulář uživateli nabídne napsat e-mailem. Data se nikam neukládají.
+
+import { poptavka, potvrzeni } from './_emaily.js';
 
 const TEMATA = ['Nájem a bydlení', 'Dluhy a exekuce', 'Sociální dávky', 'Jiné'];
 const MAX_POPIS = 1000;
@@ -46,36 +50,27 @@ export default async function handler(req, res) {
   const to = process.env.KONTAKT_TO || 'info@radanadosah.cz';
   if (!key || !from) return reply(503, { ok: false, error: 'not-configured' }, '/kontakt/?chyba=odeslani#formular');
 
-  const text = [
-    'Nová žádost o schůzku z webu Rada na dosah',
-    '',
-    `Jméno a příjmení: ${data.jmeno}`,
-    `Telefon: ${data.telefon || '–'}`,
-    `E-mail: ${data.email || '–'}`,
-    `Obec: ${data.obec || '–'}`,
-    `Téma: ${data.tema}`,
-    `Kdy se ozvat: ${data.kdy || '–'}`,
-    '',
-    'Stručný popis:',
-    data.popis,
-    '',
-    'Souhlas se zásadami ochrany osobních údajů: ano',
-  ].join('\n');
+  const zaklad = (process.env.SITE_URL || 'https://www.radanadosah.cz').replace(/\/$/, '');
+  const prijato = new Date();
+  const posli = (zprava) => fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ from, ...zprava }),
+  }).then(async (r) => {
+    if (!r.ok) console.error('resend', r.status, await r.text().catch(() => ''));
+    return r.ok;
+  }, (e) => { console.error('resend', e.message); return false; });
 
-  try {
-    const r = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        from, to: [to],
-        reply_to: data.email || undefined,
-        subject: `Žádost o schůzku: ${data.tema} – ${data.jmeno}`,
-        text,
-      }),
-    });
-    if (!r.ok) return reply(502, { ok: false, error: 'send' }, '/kontakt/?chyba=odeslani#formular');
-  } catch {
+  // 1) Poptávka poradně: bez ní žádost nepřijímáme (klient dostane nabídku napsat e-mailem)
+  const p = poptavka(data, { zaklad, prijato });
+  if (!(await posli({ to: [to], reply_to: data.email || undefined, subject: p.subject, html: p.html, text: p.text }))) {
     return reply(502, { ok: false, error: 'send' }, '/kontakt/?chyba=odeslani#formular');
   }
-  return reply(200, { ok: true }, '/dekujeme/');
+  // 2) Potvrzení klientovi: když selže, žádost i tak platí
+  let potvrzeno = false;
+  if (data.email) {
+    const c = potvrzeni(data, { zaklad, prijato });
+    potvrzeno = await posli({ to: [data.email], reply_to: to, subject: c.subject, html: c.html, text: c.text });
+  }
+  return reply(200, { ok: true, potvrzeni: potvrzeno }, '/dekujeme/');
 }

@@ -54,6 +54,23 @@ Dokud nejsou proměnné nastavené, formulář po odeslání slušně oznámí c
 
 Klient vybral paletu Malina, je natrvalo v `:root` v `assets/css/site.css`. Přepínač palet (17 palet + vlastní barvy) je z webu odstraněný. Najdeš ho v gitu v commitu `7a088dd`, kdyby bylo potřeba vybírat znovu.
 
+## Formulář a e-maily (Resend)
+
+Formulář „Požádat o schůzku“ posílá `api/kontakt.js` přes [Resend](https://resend.com) dva e-maily (šablony `api/_emaily.js`):
+
+- **Poptávka** na `info@radanadosah.cz`: jméno, téma, tlačítka Zavolat / Odpovědět e-mailem, údaje, popis a datum, do kdy se máme ozvat (5 pracovních dnů). Odpověď jde rovnou klientovi (reply-to).
+- **Potvrzení klientovi** (jen když vyplnil e-mail): poděkování, co bude dál, téma, odkaz „Co si vzít s sebou“, adresa a krizová čísla. Schválně v něm není nic, co klient napsal (jméno ani popis), aby formulář nešel zneužít k rozesílání cizího textu.
+- **Náhled:** `node tools/email/nahled.mjs` → `docs/email-*.png` (počítač i mobil).
+
+**Zapnutí (jednou):**
+
+1. Resend → Domains → Add domain `radanadosah.cz`, region **EU (Ireland)**.
+2. WEDOS → Domény → radanadosah.cz → DNS záznamy: přidat záznamy, které Resend ukáže. Obvykle jsou to TXT `resend._domainkey` (DKIM), MX `send` → `feedback-smtp.eu-west-1.amazonses.com` (priorita 10) a TXT `send` → `v=spf1 include:amazonses.com ~all`. Stávající záznamy pro Proton Mail (MX, SPF, DKIM, DMARC) zůstávají beze změny. Pak v Resendu kliknout na Verify.
+3. Resend → API Keys → Create (Sending access, doména radanadosah.cz).
+4. Vercel → Settings → Environment Variables (Production): `RESEND_API_KEY`, `KONTAKT_FROM` = `Rada na dosah <web@radanadosah.cz>`, volitelně `KONTAKT_TO` (výchozí info@radanadosah.cz). Redeploy.
+
+Doména má DMARC `p=quarantine`, takže bez ověřené domény v Resendu by e-maily končily ve spamu.
+
 ## Správa webu pro klienta (/admin/)
 
 Klient upravuje web bez gitu a bez AI na **https://kl-poradna.vercel.app/admin/** (později `radanadosah.cz/admin/`, stará adresa `/upravit/` přesměruje):
@@ -100,7 +117,7 @@ Volitelně `UPRAVY_REPO` (výchozí podle Vercelu) a `UPRAVY_VETEV` (výchozí `
 ## Před spuštěním (DOPLNIT)
 
 - [ ] **Úpravy textů:** na Vercelu nastavit `UPRAVY_HESLO` a `UPRAVY_GITHUB_TOKEN` (viz Správa webu), heslo a odkaz /admin/ předat klientovi.
-- [ ] **Příjem formuláře:** na Vercelu nastavit `RESEND_API_KEY`, `KONTAKT_FROM` a případně `KONTAKT_TO` (viz Nasazení na Vercel). Poslat zkušební žádost.
+- [ ] **Příjem formuláře:** (viz Formulář a e-maily) na Vercelu nastavit `RESEND_API_KEY`, `KONTAKT_FROM` a případně `KONTAKT_TO` (viz Nasazení na Vercel). Poslat zkušební žádost.
 - [ ] Doménu (`SITE` v build.py) ověřit u registrátora. radanadosah.cz zatím nemá DNS záznam.
 - [ ] Doplnit IČO, zápis v rejstříku ústavů, datovou schránku a číslo účtu.
 - [ ] Doplnit partnery, loga a odkaz na výroční zprávy (O nás).

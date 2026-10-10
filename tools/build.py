@@ -5,7 +5,7 @@
   python3 tools/build.py preview    -> preview/  (náhled: ploché soubory kontakt.html, relativní cesty, formulář v ukázkovém režimu)
 
 Build používá jen standardní knihovnu Pythonu. Fotky se zmenšují zvlášť (tools/images.py, macOS) do assets/img/web/.
-Proměnné prostředí: SITE_URL (výchozí https://radanadosah.cz), FORM_ENDPOINT (výchozí /api/kontakt).
+Proměnné prostředí: SITE_URL (výchozí https://www.radanadosah.cz), FORM_ENDPOINT (výchozí /api/kontakt).
 
 Zástupné značky ve stránkách:
   {{link:slug}}  {{asset:cesta}}  {{icon:nazev}}  {{picture:nazev|alt|eager/lazy|trida}}  {{logo}}
@@ -20,7 +20,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-SITE = os.environ.get("SITE_URL", "https://radanadosah.cz").rstrip("/")   # DOPLNIT: finální doména
+SITE = os.environ.get("SITE_URL", "https://www.radanadosah.cz").rstrip("/")   # hlavní doména na Vercelu (bez www přesměruje)
 FORM_ENDPOINT = os.environ.get("FORM_ENDPOINT", "/api/kontakt/")          # Vercel funkce api/kontakt.js
 FORM_ACTION = "/api/kontakt/"                                            # záloha bez JavaScriptu (POST)
 
@@ -155,6 +155,7 @@ def build(mode):
     if (ROOT / "assets/img/og.jpg").exists():
         shutil.copy(ROOT / "assets/img/og.jpg", out / "assets/img/og.jpg")
     shutil.copy(ROOT / "assets/img/favicon.svg", out / "assets/img/favicon.svg")
+    shutil.copy(ROOT / "assets/img/email-znak.png", out / "assets/img/email-znak.png")  # logo v e-mailech (api/_emaily.js)
 
     layout = (ROOT / "src/layout.html").read_text()
     pages = sorted((ROOT / "src/pages").glob("*.html"))
