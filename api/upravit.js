@@ -18,6 +18,7 @@
 
 import crypto from 'node:crypto';
 import zlib from 'node:zlib';
+import { V_PRIPRAVE } from '../stav-webu.js';
 
 // Hodnoty vložené do Vercelu často nesou mezeru, konec řádku nebo uvozovky navíc; diakritika může přijít rozložená (NFD)
 const cisti = (s) => String(s ?? '').normalize('NFC').trim().replace(/^(["'])(.*)\1$/s, '$2');
@@ -40,14 +41,20 @@ const DATA = 'Upravy-Data: ';
 /* ---------- Přihlášení (podepsaná cookie, změna hesla zneplatní všechna přihlášení) ---------- */
 const tajemstvi = () => crypto.createHash('sha256').update('upravy|' + HESLO + '|' + TOKEN).digest();
 const podpis = (exp) => crypto.createHmac('sha256', tajemstvi()).update(String(exp)).digest('base64url');
+// Vrací expiraci přihlášení (sekundy), nebo false
 function prihlasen(req) {
   const m = String(req.headers.cookie || '').match(new RegExp(COOKIE + '=(\\d+)\\.([\\w-]+)'));
   if (!m || Number(m[1]) < Date.now() / 1000) return false;
   const a = Buffer.from(m[2]), b = Buffer.from(podpis(m[1]));
-  return a.length === b.length && crypto.timingSafeEqual(a, b);
+  return a.length === b.length && crypto.timingSafeEqual(a, b) && Number(m[1]);
 }
-function cookie(res, hodnota, maxAge) {
-  res.setHeader('Set-Cookie', `${COOKIE}=${hodnota}; Path=/api/upravit; HttpOnly; Secure; SameSite=Strict; Max-Age=${maxAge}`);
+// Druhá cookie (rnd_nahled, celý web): middleware.js podle ní pustí přihlášené na web, i když je „v přípravě“
+const nahled = (exp, maxAge) => `rnd_nahled=${exp ? `${exp}.${crypto.createHmac('sha256', tajemstvi()).update('nahled|' + exp).digest('base64url')}` : ''}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${maxAge}`;
+function cookie(res, exp, maxAge) {
+  res.setHeader('Set-Cookie', [
+    `${COOKIE}=${exp ? `${exp}.${podpis(exp)}` : ''}; Path=/api/upravit; HttpOnly; Secure; SameSite=Strict; Max-Age=${maxAge}`,
+    nahled(exp, maxAge),
+  ]);
 }
 function hesloSedi(zadane) {
   const a = crypto.createHash('sha256').update(cisti(zadane)).digest();
@@ -377,7 +384,9 @@ export default async function handler(req, res) {
       if (akce === 'stav') {
         const sha = String(q.sha || '');
         const nasazeni = /^[\w-]{6,64}$/.test(sha) ? await uloziste.nasazeni(sha).catch(() => 'nezname') : null;
-        return res.status(200).json({ ok: true, prihlasen: true, nasazeni });
+        const exp = prihlasen(req);
+        res.setHeader('Set-Cookie', nahled(exp, exp - Math.floor(Date.now() / 1000)));
+        return res.status(200).json({ ok: true, prihlasen: true, nasazeni, vPriprave: V_PRIPRAVE });
       }
       if (akce === 'historie') {
         const list = await uloziste.historie();
@@ -398,10 +407,10 @@ export default async function handler(req, res) {
         return res.status(401).json({ ok: false, error: 'heslo' });
       }
       const exp = Math.floor(Date.now() / 1000) + PLATNOST_S;
-      cookie(res, `${exp}.${podpis(exp)}`, PLATNOST_S);
+      cookie(res, exp, PLATNOST_S);
       return res.status(200).json({ ok: true });
     }
-    if (akce === 'odhlasit') { cookie(res, '', 0); return res.status(200).json({ ok: true }); }
+    if (akce === 'odhlasit') { cookie(res, 0, 0); return res.status(200).json({ ok: true }); }
     if (!prihlasen(req)) return res.status(401).json({ ok: false, error: 'prihlaseni' });
 
     if (akce === 'ulozit') {

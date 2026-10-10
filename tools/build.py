@@ -140,6 +140,17 @@ def build_admin(out):
     (out / "admin/index.html").write_text(page)
 
 
+def build_priprava(out):
+    """Stránka „Web je v přípravě“ (/v-priprave/). Ukazuje ji middleware.js, dokud je v stav-webu.js V_PRIPRAVE = true."""
+    asset = lambda p: "/" + p + (f"?v={fingerprint(p)}" if p.endswith((".css", ".js")) else "")
+    page = (ROOT / "src/v-priprave.html").read_text()
+    page = page.replace("{{logo}}", LOGO).replace("{{deco}}", DECO).replace("{{site}}", SITE)
+    page = re.sub(r"\{\{asset:([^}]+)\}\}", lambda m: asset(m.group(1)), page)
+    page = re.sub(r"\{\{icon:([\w-]+)\}\}", lambda m: icon(m.group(1)), page)
+    (out / "v-priprave").mkdir(exist_ok=True)
+    (out / "v-priprave/index.html").write_text(page)
+
+
 def build(mode):
     out = ROOT / ("preview" if mode == "preview" else "dist")
     if out.exists():
@@ -213,6 +224,7 @@ def build(mode):
 
     if mode != "preview":
         build_admin(out)
+        build_priprava(out)
         # Správa webu podle toho pozná, že je nová verze opravdu venku (Vercel nastaví sha commitu při buildu)
         (out / "verze.json").write_text(json.dumps({"sha": os.environ.get("VERCEL_GIT_COMMIT_SHA", "")}))
         (out / "sitemap.xml").write_text(

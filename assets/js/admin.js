@@ -850,7 +850,7 @@
 
   /* ---------- Start ---------- */
   api('stav').then(function (r) {
-    if (r.ok) return start();
+    if (r.ok) { $('#a-priprava').hidden = !r.vPriprave; return start(); }
     if (r.status === 503) return brana('a-off');
     prihlaseni();
     if (r.status !== 401) $('#a-login-error').textContent = 'Nepodařilo se spojit se serverem. Zkuste stránku obnovit.';

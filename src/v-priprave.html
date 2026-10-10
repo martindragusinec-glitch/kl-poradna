@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="cs" class="js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="format-detection" content="telephone=no">
+<title>Rada na dosah – web připravujeme</title>
+<meta name="description" content="Bezplatná právní poradna na Kladně: nájem, dluhy, sociální dávky. Web právě dokončujeme, napište nám na info@radanadosah.cz.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#8E1B3E">
+<meta property="og:title" content="Rada na dosah – bezplatná poradna na Kladně">
+<meta property="og:image" content="{{site}}/assets/img/og.jpg">
+<link rel="icon" href="{{asset:assets/img/favicon.svg}}" type="image/svg+xml">
+<link rel="preload" href="{{asset:assets/fonts/satoshi-900.woff2}}" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="{{asset:assets/css/site.css}}">
+<style>
+  body { min-height: 100svh; display: grid; padding: var(--edge); background: var(--paper); }
+  .soon { position: relative; overflow: hidden; display: grid; align-content: space-between; gap: 48px; min-height: calc(100svh - 2 * var(--edge)); padding: clamp(24px, 5vw, 64px); border-radius: var(--r-panel); background: var(--blue); color: var(--on-blue); }
+  .soon .brand { position: relative; z-index: 1; }
+  .soon__body { position: relative; z-index: 1; max-width: 780px; }
+  .soon__tag { display: inline-flex; align-items: center; gap: 10px; padding: 8px 16px; border-radius: 999px; background: rgb(42 18 25 / .28); font-weight: 700; font-size: 1rem; }
+  .soon__tag::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--yellow); animation: pulz 1.8s ease-in-out infinite; }
+  @keyframes pulz { 50% { opacity: .35; } }
+  .soon h1 { margin-top: 22px; color: var(--on-blue); font-size: var(--fs-h1); line-height: .98; }
+  .soon h1 em { font-style: normal; color: var(--yellow); }
+  .soon__lead { margin-top: 22px; max-width: 36ch; font-size: var(--fs-lead); line-height: 1.5; color: var(--on-blue-2); }
+  .soon .btn-row { margin-top: 32px; }
+  .soon__foot { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: 14px 40px; align-items: end; justify-content: space-between; font-size: var(--fs-small); color: var(--on-blue-2); }
+  .soon__foot address { font-style: normal; }
+  .soon__foot address strong { display: block; color: var(--on-blue); }
+  .soon__crisis { max-width: 420px; padding: 14px 18px; border-radius: 20px 20px 20px 6px; background: var(--crisis); color: var(--ink); }
+  .soon__crisis a { color: var(--ink); font-weight: 800; }
+  .soon .deco { position: absolute; right: -6%; bottom: -8%; width: min(46vw, 560px); opacity: .16; z-index: 0; pointer-events: none; }
+  .soon .deco .b1, .soon .deco .b2, .soon .deco .b3 { fill: var(--on-blue); }
+  @media (prefers-reduced-motion: reduce) { .soon__tag::before { animation: none; } }
+</style>
+</head>
+<body>
+<main class="soon">
+  <span class="brand brand--light">
+    {{logo}}
+    <span><span class="brand__name">Rada <span>na dosah</span></span><span class="brand__sub">bezplatná poradna na Kladně</span></span>
+  </span>
+
+  <div class="soon__body">
+    <p class="soon__tag">Web právě dokončujeme</p>
+    <h1><em>Bezplatná</em> poradna na&nbsp;Kladně</h1>
+    <p class="soon__lead">Poradíme vám s&nbsp;nájmem, dluhy nebo sociálními dávkami. Srozumitelně a&nbsp;zdarma. Než web spustíme, napište nám e-mail a&nbsp;domluvíme se.</p>
+    <div class="btn-row">
+      <a class="btn btn--sun" href="mailto:info@radanadosah.cz">{{icon:envelope-simple}}info@radanadosah.cz</a>
+    </div>
+  </div>
+
+  <div class="soon__foot">
+    <address><strong>Rada na dosah, z.ú.</strong>T. G. Masaryka 108, 272&nbsp;01 Kladno · jen po předchozí domluvě</address>
+    <p class="soon__crisis"><strong>Nejsme krizová služba.</strong> V&nbsp;akutním ohrožení volejte <a href="tel:158">158</a> nebo <a href="tel:112">112</a>.</p>
+  </div>
+  {{deco}}
+</main>
+</body>
+</html>

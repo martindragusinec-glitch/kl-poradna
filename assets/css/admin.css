@@ -122,6 +122,8 @@ textarea.a-input { min-height: 110px; resize: vertical; }
 .a-browser__url { display: inline-flex; align-items: center; gap: 6px; flex: 1; min-width: 0; height: 32px; padding: 0 12px; border-radius: 10px; background: var(--white); border: 1px solid var(--line); font-size: .875rem; color: var(--ink-2); }
 .a-browser__url span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .a-browser__url i[data-ico] svg { width: 15px; height: 15px; }
+.a-hidden-pill { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 12px; border-radius: 999px; background: var(--krem, #FFE8DA); color: var(--ink); font-size: .8125rem; font-weight: 700; white-space: nowrap; cursor: help; }
+.a-hidden-pill::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--blue); }
 .a-browser__open { display: inline-flex; align-items: center; gap: 6px; font-size: .875rem; font-weight: 700; color: var(--ink); text-decoration: none; padding: 6px 8px; border-radius: 8px; }
 .a-browser__open:hover { background: var(--paper); }
 .a-browser__open i[data-ico] svg { width: 16px; height: 16px; }

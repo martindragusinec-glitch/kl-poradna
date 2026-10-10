@@ -265,9 +265,7 @@ a:focus-visible .i { color: var(--ink); }
 .msg__bubble { padding: 24px 28px 26px; border-radius: var(--r-bubble); background: var(--white); }
 .msg__bubble h3 { font-size: clamp(1.5rem, 1.25rem + .9vw, 2rem); }
 .msg__bubble p { margin-top: 8px; color: var(--ink-2); }
-.msg--you { justify-self: end; }
-.msg--you .msg__meta { justify-content: flex-end; }
-.msg--you .msg__bubble { background: var(--blue); color: var(--on-blue); border-radius: var(--r-bubble-r); }
+.msg--you .msg__bubble { background: var(--blue); color: var(--on-blue); }
 .msg--you .msg__bubble p { color: var(--on-blue); }
 .msg--sun .msg__bubble { background: var(--yellow); }
 .msg--sun .msg__bubble p { color: var(--ink); }
