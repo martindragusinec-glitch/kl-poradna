@@ -67,7 +67,7 @@ Formulář „Požádat o schůzku“ posílá `api/kontakt.js` přes [Resend](h
 1. Resend → Domains → Add domain `radanadosah.cz`, region **EU (Ireland)**.
 2. WEDOS → Domény → radanadosah.cz → DNS záznamy: přidat záznamy, které Resend ukáže. Obvykle jsou to TXT `resend._domainkey` (DKIM), MX `send` → `feedback-smtp.eu-west-1.amazonses.com` (priorita 10) a TXT `send` → `v=spf1 include:amazonses.com ~all`. Stávající záznamy pro Proton Mail (MX, SPF, DKIM, DMARC) zůstávají beze změny. Pak v Resendu kliknout na Verify.
 3. Resend → API Keys → Create (Sending access, doména radanadosah.cz).
-4. Vercel → Settings → Environment Variables (Production): `RESEND_API_KEY`, `KONTAKT_FROM` = `Rada na dosah <web@radanadosah.cz>`, volitelně `KONTAKT_TO` (výchozí info@radanadosah.cz). Redeploy.
+4. Vercel → Settings → Environment Variables (Production): `RESEND_API_KEY`; volitelně `KONTAKT_FROM` (výchozí `Rada na dosah <web@radanadosah.cz>`) a `KONTAKT_TO` (výchozí info@radanadosah.cz). Redeploy.
 
 Doména má DMARC `p=quarantine`, takže bez ověřené domény v Resendu by e-maily končily ve spamu.
 

@@ -2,7 +2,7 @@
 // Pošle poptávku poradně (šablona api/_emaily.js) a klientovi, který vyplnil e-mail, potvrzení o přijetí.
 // Proměnné prostředí (Vercel → Settings → Environment Variables):
 //   RESEND_API_KEY  klíč z https://resend.com (doména odesílatele musí být ověřená)
-//   KONTAKT_FROM    odesílatel, např. "Web Rada na dosah <web@radanadosah.cz>"
+//   KONTAKT_FROM    volitelně odesílatel, výchozí "Rada na dosah <web@radanadosah.cz>"
 //   KONTAKT_TO      příjemce, výchozí info@radanadosah.cz
 //   SITE_URL        adresa webu pro odkazy a logo v e-mailech, výchozí https://www.radanadosah.cz
 // Bez nastavení vrací 503 a formulář uživateli nabídne napsat e-mailem. Data se nikam neukládají.
@@ -48,11 +48,11 @@ export default async function handler(req, res) {
   if (errors.length) return reply(400, { ok: false, error: 'invalid', fields: errors }, '/kontakt/?chyba=1#formular');
 
   const key = env('RESEND_API_KEY');
-  const from = env('KONTAKT_FROM');
+  const from = env('KONTAKT_FROM') || 'Rada na dosah <web@radanadosah.cz>';
   const to = env('KONTAKT_TO') || 'info@radanadosah.cz';
-  if (!key || !from) {
+  if (!key) {
     // jen názvy chybějících proměnných, nikdy hodnoty
-    const chybi = [!key && 'RESEND_API_KEY', !from && 'KONTAKT_FROM'].filter(Boolean);
+    const chybi = ['RESEND_API_KEY'];
     console.error('kontakt: chybí', chybi.join(', '));
     return reply(503, { ok: false, error: 'not-configured', chybi }, '/kontakt/?chyba=odeslani#formular');
   }
