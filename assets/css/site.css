@@ -555,6 +555,7 @@ fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
   .legal-table td::before { content: attr(data-label) ": "; font-weight: 700; }
 }
 .todo { background: repeating-linear-gradient(-45deg, var(--butter) 0 6px, transparent 6px 12px); outline: 2px dashed #8A6A00; outline-offset: 1px; padding-inline: .2em; border-radius: 3px; color: var(--ink); }
+.site-footer .todo { background: none; outline: 0; padding: 0; color: var(--yellow); text-decoration: underline dashed; text-underline-offset: .25em; }
 
 /* ---------- Patička ---------- */
 .site-footer { margin-top: var(--section); padding: 0 var(--edge) var(--edge); }

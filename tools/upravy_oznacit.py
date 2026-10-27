@@ -17,9 +17,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 VOID = {"br", "img", "input", "meta", "link", "hr", "source", "wbr", "area", "col", "embed", "param", "track"}
 INLINE = {"strong", "em", "b", "i", "br", "a", "span", "small", "abbr"}
-SKIP_TAGS = {"script", "style", "svg", "head", "title", "button", "select", "option", "textarea", "noscript", "template", "nav"}
+SKIP_TAGS = {"script", "style", "svg", "head", "title", "button", "select", "option", "textarea", "noscript", "template"}
 ITEM_TAGS = {"details"}  # opakovatelné položky: editor je umí přidat a smazat (časté dotazy)
-SKIP_CLASSES = {"brand", "skip-link", "vh", "hp", "msg__num"}
+SKIP_CLASSES = {"nav", "brand", "skip-link", "vh", "hp", "msg__num"}
 TOKEN = re.compile(
     r"<!--.*?-->|<![^>]*>"
     r"|<(/?)([a-zA-Z][a-zA-Z0-9-]*)((?:\s+[^\s=/>]+(?:\s*=\s*(?:\"[^\"]*\"|'[^']*'|[^\s>]+))?)*)\s*(/?)>"

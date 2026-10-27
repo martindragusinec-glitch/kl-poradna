@@ -9,7 +9,7 @@
 
 import { poptavka, potvrzeni } from './_emaily.js';
 
-const TEMATA = ['Nájem a bydlení', 'Dluhy a exekuce', 'Sociální dávky', 'Jiné'];
+const TEMATA = ['Kontrola smluv', 'Jednání s věřiteli', 'Ochrana nemovitosti', 'Jiné'];
 // Hodnoty vložené do Vercelu často nesou mezeru, konec řádku nebo uvozovky navíc
 const env = (k) => String(process.env[k] ?? '').trim().replace(/^(["'])(.*)\1$/s, '$2').trim();
 const MAX_POPIS = 1000;

@@ -10,7 +10,7 @@ const root = path.resolve(here, '../..');
 const zaklad = process.argv[2] || 'http://localhost:8797';
 const data = {
   jmeno: 'Jana Nováková', telefon: '777 123 456', email: 'jana.novakova@example.cz', obec: 'Kladno – Kročehlavy',
-  tema: 'Dluhy a exekuce', kdy: 'dopoledne, nejlépe do 11 hodin',
+  tema: 'Jednání s věřiteli', kdy: 'dopoledne, nejlépe do 11 hodin',
   popis: 'Dobrý den, přišel mi dopis od exekutora a nevím, co s tím. Mám tři menší dluhy u různých firem.\nLhůta na odpověď je do konce měsíce.',
 };
 const prijato = new Date('2026-10-08T12:32:00Z');
