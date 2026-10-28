@@ -99,6 +99,20 @@ Volitelně `UPRAVY_REPO` (výchozí podle Vercelu) a `UPRAVY_VETEV` (výchozí `
 - Lokálně `npm run serve` → http://localhost:8797/admin/, heslo `upravy` (nebo `UPRAVY_HESLO`). Lokálně se zapisuje rovnou do `src/`, `dist/` se přestaví a historie je jen v paměti serveru.
 - Správa webu vyžaduje `X-Frame-Options: SAMEORIGIN` (náhled je iframe), viz `vercel.json`.
 
+## Figma
+
+Soubor https://www.figma.com/design/8GzHxRRc8ZKgremOQfjpVe (tým Galosoft):
+- **🖥 Web – desktop 1440 / 📱 Web – mobil 390:** všech 7 stránek tak, jak jsou na webu;
+- **✉️ V přípravě a e-maily:** stránka „Web je v přípravě“, poptávka a potvrzení;
+- **🎨 Brand & komponenty:** barvy jako proměnné (paleta Malina), textové styly, logo a ikony.
+
+Starý první návrh je v archivních stránkách. Písmo ve Figmě je Figtree, protože Satoshi Figma API nenabízí. Po instalaci Satoshi ho jde vyměnit přes Replace fonts.
+
+**Obnovení po změnách webu:**
+1. `npm run serve`, pak `node tools/figma/export-svg.mjs` → `tools/figma/out/*.svg` (vykreslená stránka jako SVG s údaji v názvech vrstev).
+2. Nahrát přes Figma MCP `upload_assets` na danou stránku. Figma z SVG udělá upravitelné vrstvy.
+3. Spustit `tools/figma/postprocess.js` přes `use_figma` (doplnit PAGE_ID). Složí řádky do odstavců se správným řezem písma, plochy převede na obdélníky se zaoblením, okraji a stínem, napojí barvy na proměnné a rámy pojmenuje a seřadí.
+
 ## Přístupnost (cíl WCAG 2.2 AA, kontrast AAA)
 
 - Odkaz „Přeskočit na obsah“, správná struktura stránky (landmarky) a pořadí nadpisů, `aria-current` v menu.
