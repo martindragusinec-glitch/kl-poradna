@@ -68,7 +68,7 @@ a { color: ${C.malina}; }
     <td style="padding-right:12px;"><img src="${zaklad}/assets/img/email-znak.png" width="44" height="35" alt="" style="display:block;border:0;"></td>
     <td style="font-family:${F};color:${C.ink};">
       <div style="font-size:19px;line-height:22px;font-weight:900;letter-spacing:-0.3px;">Rada <span style="color:${C.malina};">na dosah</span></div>
-      <div style="font-size:12px;line-height:16px;font-weight:700;color:${C.ink2};">bezplatná poradna na&nbsp;Kladně</div>
+      <div style="font-size:12px;line-height:16px;font-weight:700;color:${C.ink2};">bezplatná poradna</div>
     </td>
   </tr></table>
 </td></tr>
