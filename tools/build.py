@@ -110,7 +110,9 @@ def faq_jsonld(content):
 ORG = {
     "@context": "https://schema.org",
     "@type": ["NGO", "LegalService"],
-    "name": "Rada na dosah, z.ú.",
+    "name": "Rada na dosah, z. ú.",
+    "legalName": "Rada na dosah, z. ú.",
+    "identifier": {"@type": "PropertyValue", "propertyID": "IČO", "value": "30175194"},
     "alternateName": "Rada na dosah",
     "description": "Bezplatné právní poradenství pro lidi v sociální nouzi na Kladně: nájem, dluhy, sociální dávky.",
     "url": SITE + "/",

@@ -191,7 +191,7 @@ export function potvrzeni(d, { zaklad, prijato = new Date() }) {
   <strong>Nejsme krizová služba.</strong> V&nbsp;akutním ohrožení volejte <a href="tel:158" style="color:${C.ink};font-weight:900;">158</a> nebo <a href="tel:112" style="color:${C.ink};font-weight:900;">112</a>.
 </td></tr>`;
   const host = zaklad.replace(/^https?:\/\//, '');
-  const paticka = `<strong style="color:${C.ink};">Rada na dosah, z.ú.</strong> · bezplatné právní poradenství na&nbsp;Kladně · <a href="${zaklad}/" style="color:${C.ink2};">${esc(host)}</a><br>
+  const paticka = `<strong style="color:${C.ink};">Rada na dosah, z.&nbsp;ú.</strong> · bezplatné právní poradenství na&nbsp;Kladně · <a href="${zaklad}/" style="color:${C.ink2};">${esc(host)}</a><br>
 Tento e-mail přišel, protože někdo vyplnil formulář na&nbsp;${esc(host)} s&nbsp;touto adresou. Pokud jste to nebyli vy, e-mail prosím ignorujte.`;
   const text = [
     'Děkujeme, vaše zpráva k nám dorazila.',
@@ -209,7 +209,7 @@ Tento e-mail přišel, protože někdo vyplnil formulář na&nbsp;${esc(host)} s
     'Kde nás najdete: T. G. Masaryka 108, 272 01 Kladno (pěší zóna v centru, jen po předchozí domluvě).',
     'Nejsme krizová služba. V akutním ohrožení volejte 158 nebo 112.',
     '',
-    `Rada na dosah, z.ú. · ${host}`,
+    `Rada na dosah, z. ú. · ${host}`,
     `Tento e-mail přišel, protože někdo vyplnil formulář na ${host} s touto adresou. Pokud jste to nebyli vy, e-mail prosím ignorujte.`,
   ].join('\n');
   return {

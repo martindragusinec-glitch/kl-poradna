@@ -448,8 +448,8 @@ a:focus-visible .i { color: var(--ink); }
 .support-panel { padding: clamp(32px, 5vw, 64px); border-radius: var(--r-panel); background: var(--blue); color: var(--on-blue); }
 .support-panel h2 { font-size: clamp(2.25rem, 1.6rem + 2.6vw, 4rem); }
 .support-panel p { margin-top: 16px; font-size: var(--fs-lead); line-height: 1.5; color: var(--on-blue-2); max-width: 40ch; }
-.account { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-top: 26px; padding: 18px 22px; background: rgb(255 255 255 / .12); border-radius: 22px 22px 22px 4px; }
-.account__num { font-family: var(--display); font-size: 1.75rem; font-weight: 800; letter-spacing: -.01em; font-variant-numeric: tabular-nums; }
+.account { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-top: 26px; padding: 18px 22px; background: rgb(42 18 25 / .32); border-radius: 22px 22px 22px 4px; }
+.account__num { font-family: var(--display); font-size: clamp(1.25rem, .95rem + 1.6vw, 1.75rem); overflow-wrap: anywhere; font-weight: 800; letter-spacing: -.01em; font-variant-numeric: tabular-nums; }
 .copy-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0; border: 0; background: none; color: inherit; font: inherit; font-size: var(--fs-small); font-weight: 650; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: .2em; cursor: pointer; }
 .copy-btn:hover { text-decoration-thickness: 3px; }
 .copy-btn .i { width: 20px; height: 20px; }
@@ -554,9 +554,7 @@ fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
   .legal-table td { display: block; padding: 2px 0; border: 0; }
   .legal-table td::before { content: attr(data-label) ": "; font-weight: 700; }
 }
-.todo { background: repeating-linear-gradient(-45deg, var(--butter) 0 6px, transparent 6px 12px); outline: 2px dashed #8A6A00; outline-offset: 1px; padding-inline: .2em; border-radius: 3px; color: var(--ink); }
-.site-footer .todo { background: none; outline: 0; padding: 0; color: var(--yellow); text-decoration: underline dashed; text-underline-offset: .25em; }
-
+.site-footer 
 /* ---------- Patička ---------- */
 .site-footer { margin-top: var(--section); padding: 0 var(--edge) var(--edge); }
 .site-footer__panel { background: var(--ink); color: #F3E8EB; border-radius: var(--r-panel); padding-block: clamp(48px, 6vw, 88px) 28px; font-size: var(--fs-small); }
